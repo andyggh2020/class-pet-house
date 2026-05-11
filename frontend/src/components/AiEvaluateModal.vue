@@ -75,7 +75,8 @@ const generate = async () => {
 
   try {
     const token = localStorage.getItem('token')
-    const response = await fetch('/api/ai/evaluate', {
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api'
+    const response = await fetch(`${baseUrl}/ai/evaluate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
