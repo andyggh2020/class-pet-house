@@ -4,7 +4,7 @@
     <GroupManageView v-if="groupMode" @close="$emit('exit-group-mode')" />
 
     <!-- 学生卡片网格 (普通模式) -->
-    <div v-else class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2 sm:gap-4 lg:gap-6 px-1 sm:px-0 py-2">
+    <div v-else class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-5 px-1 sm:px-0 py-2">
       <StudentCard
         v-for="(s, index) in filteredStudents" :key="s.id"
         class="animate-stagger-fade-in"
