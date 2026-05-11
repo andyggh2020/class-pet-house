@@ -216,7 +216,7 @@ watch(filterType, () => {
 
 // 创建专门的 Axios 实例（绕过全局拦截器，直接带 Basic Auth）
 const adminApi = axios.create({
-  baseURL: '/api/admin',
+  baseURL: (import.meta.env.VITE_API_BASE_URL || '/api') + '/admin',
   timeout: 10000
 })
 
