@@ -135,7 +135,7 @@ const petImageUrl = computed(() => {
   if (!props.student || !props.student.pet_type) return ''
   const pet = PETS.find(p => p.id === props.student.pet_type)
   if (!pet) return ''
-  return getPetImageUrl(pet.folder, petStage.value)
+  return getPetImageUrl(pet.id, petStage.value)
 })
 </script>
 

@@ -1,107 +1,109 @@
 <template>
   <div
-    class="relative rounded-xl sm:rounded-2xl p-2 sm:p-4 flex flex-col transition-all duration-300 group overflow-hidden"
+    class="relative rounded-2xl overflow-hidden transition-all duration-300 group cursor-pointer bg-white"
     :class="{
       'cursor-pointer': !readOnly,
       'cursor-default': readOnly,
-      'ring-4 ring-accent bg-theme-light scale-[0.98] opacity-90 animate-pulse': batchMode && selected,
-      'border-2 border-dashed border-gray-300 bg-white/50 hover:bg-white opacity-70 hover:opacity-100': batchMode && !selected,
-      'bg-white animate-card-breathe': !batchMode && selected,
-      'bg-white border-2 border-sky-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)] hover:border-sky-200 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.12)] hover:-translate-y-1': !batchMode && !selected && !readOnly,
-      'bg-white border-2 border-slate-100 shadow-sm': !batchMode && !selected && readOnly
+      'ring-4 ring-orange-400 scale-[0.98] opacity-90': batchMode && selected,
+      'border-2 border-dashed border-gray-300 bg-white/50 opacity-70 hover:opacity-100': batchMode && !selected,
+      'ring-4 ring-orange-400 shadow-xl shadow-orange-200/50 animate-card-breathe': !batchMode && selected,
+      'border-2 border-transparent shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] hover:-translate-y-1': !batchMode && !selected,
     }"
+    :style="!batchMode && !selected && student.pet_type ? { borderColor: 'rgb(244,114,182)', boxShadow: '0 2px 8px rgba(0,0,0,0.08), 0 4px 6px -1px rgba(244,114,182,0.25)' } : {}"
     @click="!readOnly && $emit(batchMode ? 'select' : 'click')"
   >
     <!-- 批量选择勾选框 -->
-    <div v-if="batchMode" class="absolute top-2 right-2 sm:top-3 sm:right-3 w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center transition-all z-40"
-      :class="selected ? 'bg-accent border-accent text-white scale-110 shadow-md' : 'bg-slate-100 border-slate-300 text-transparent'">
-      <span class="text-xs sm:text-sm font-bold" v-show="selected">✓</span>
+    <div v-if="batchMode" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all z-40"
+      :class="selected ? 'bg-orange-400 border-orange-400 text-white scale-110 shadow-md' : 'bg-white/80 border-gray-300 text-transparent'">
+      <span class="text-sm font-bold" v-show="selected">✓</span>
     </div>
 
-    <!-- 顶栏：等级标与操作按钮 -->
-    <div class="flex justify-between items-start relative z-30 w-full">
-      <div v-if="student.pet_type" class="flex items-center space-x-1 sm:space-x-1.5 bg-white px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-slate-100 shadow-sm">
-        <div class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full" :class="levelDotColor"></div>
-        <span class="text-slate-800 font-extrabold text-[10px] sm:text-xs tracking-tight italic">Lv.{{ petStage }}</span>
-      </div>
-      <div v-else></div>
-      
-      <div v-if="student.pet_type && !batchMode && !readOnly" class="flex gap-1">
-        <button class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-slate-100/90 rounded-full text-[10px] sm:text-xs text-slate-400 hover:text-sky-500 hover:bg-sky-50 transition-all active:scale-90 pointer-events-auto" title="保存收集卡"
-          @click.stop="$emit('print-cert')">🖨️</button>
-        <button class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-violet-50 rounded-full text-[10px] sm:text-xs text-violet-400 hover:text-violet-600 hover:bg-violet-100 transition-all active:scale-90 pointer-events-auto" title="AI评语"
-          @click.stop="$emit('ai-evaluate')">✨</button>
-        <button class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-slate-100/90 rounded-full text-[10px] sm:text-xs text-slate-400 hover:text-accent hover:bg-red-50 transition-all active:scale-90 pointer-events-auto" title="更换宠物"
-          @click.stop="$emit('change-pet')">🔄</button>
-      </div>
-    </div>
+    <!-- 宠物图片区 (aspect-square 正方形) -->
+    <div class="aspect-square relative overflow-hidden rounded-t-2xl"
+      :class="student.pet_type ? 'bg-gradient-to-br from-orange-100 via-amber-50 to-yellow-100' : 'bg-gradient-to-br from-gray-100 to-gray-50'">
 
-    <!-- 宠物图片区 -->
-    <div class="flex justify-center items-center relative my-1 sm:my-3 h-28 sm:h-40 md:h-44">
-      <div v-if="!student.pet_type" class="w-16 h-16 sm:w-28 sm:h-28 flex items-center justify-center text-2xl sm:text-5xl bg-slate-50 text-slate-300 font-bold rounded-full border border-slate-100 shadow-inner">
-        {{ student.name ? student.name.charAt(0) : '' }}
+      <!-- 无宠物：显示姓名首字 -->
+      <div v-if="!student.pet_type" class="w-full h-full flex items-center justify-center">
+        <span class="text-4xl sm:text-5xl font-black text-gray-300">{{ student.name?.charAt(0) || '?' }}</span>
       </div>
-      <div v-else class="relative w-full h-full flex justify-center items-center animate-float-idle">
+
+      <!-- 有宠物：图片 -->
+      <div v-else class="w-full h-full flex items-center justify-center animate-float-idle">
         <img v-if="petImageUrl" :src="petImageUrl" :alt="student.pet_name || '宠物'"
-          class="max-w-[90%] max-h-[90%] object-contain transition-transform duration-500 drop-shadow-md"
-          :class="{ 'animate-bounce': justScored }"
-          :style="{ transform: `scale(${petScale})` }" />
-        <div v-else class="w-14 h-14 sm:w-28 sm:h-28 flex items-center justify-center text-[10px] sm:text-sm bg-slate-50 rounded-full border border-dashed border-red-200 text-red-300 font-bold text-center p-1">
-          已下架
+          class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110 p-2"
+          :class="{ 'animate-bounce': justScored }" />
+        <div v-else class="text-xs text-red-300 font-bold text-center p-2">已下架</div>
+      </div>
+
+      <!-- 宠物名角标（右上角） -->
+      <div v-if="student.pet_type && student.pet_name" class="absolute top-2 right-2 text-[10px] px-2 py-0.5 rounded-full text-white font-bold bg-black/40 backdrop-blur-sm shadow-md z-10 max-w-[60%] truncate">
+        {{ student.pet_name }}
+      </div>
+
+      <!-- 等级徽章（右下角） -->
+      <div v-if="student.pet_type" class="absolute bottom-2 right-2 z-10">
+        <span class="text-[10px] sm:text-xs font-black px-2 py-0.5 rounded-full text-white shadow-lg"
+          :class="levelBadgeColor">Lv.{{ petStage }}</span>
+      </div>
+
+      <!-- 操作按钮（悬停显示，左上角） -->
+      <div v-if="student.pet_type && !batchMode && !readOnly"
+        class="absolute top-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+        <button class="w-6 h-6 flex items-center justify-center bg-white/90 rounded-full text-xs shadow-md hover:bg-white transition-all active:scale-90"
+          title="保存收集卡" @click.stop="$emit('print-cert')">🖨️</button>
+        <button class="w-6 h-6 flex items-center justify-center bg-white/90 rounded-full text-xs shadow-md hover:bg-white transition-all active:scale-90"
+          title="AI评语" @click.stop="$emit('ai-evaluate')">✨</button>
+        <button class="w-6 h-6 flex items-center justify-center bg-white/90 rounded-full text-xs shadow-md hover:bg-white transition-all active:scale-90"
+          title="更换宠物" @click.stop="$emit('change-pet')">🔄</button>
+      </div>
+
+      <!-- 飞入食物动效 -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden z-50">
+        <div v-for="food in flyingFoods" :key="food.id"
+          class="absolute left-1/2 bottom-4 animate-feed-fly flex justify-center items-center">
+          <span class="text-3xl drop-shadow-2xl">{{ food.icon }}</span>
         </div>
       </div>
     </div>
 
-    <!-- 学生姓名区 -->
-    <div class="flex items-baseline justify-between gap-1 sm:gap-2 mb-1">
-      <h3 class="text-sm sm:text-lg font-extrabold text-slate-800 truncate leading-tight">{{ student.name }}</h3>
-      <span v-if="student.pet_type" class="text-[9px] sm:text-xs font-medium text-slate-400 truncate shrink-0">{{ student.pet_name || '未命名' }}</span>
-    </div>
+    <!-- 信息区 -->
+    <div class="p-3 sm:p-4">
+      <!-- 学生姓名 -->
+      <h3 class="font-bold text-base sm:text-lg text-gray-800 group-hover:text-orange-500 transition-colors truncate leading-tight mb-2">
+        {{ student.name }}
+      </h3>
 
-    <!-- 进度条区域 -->
-    <div v-if="student.pet_type" class="flex flex-col gap-0.5 sm:gap-1 mb-1.5 sm:mb-2">
-      <div class="flex justify-between items-center text-[10px] sm:text-xs font-semibold">
-        <span class="text-slate-400">本级进度</span>
-        <span v-if="!isMaxLevel" class="text-blue-600 font-bold flex items-center gap-0.5">
-          <span class="text-slate-400 hidden min-[360px]:inline">还差</span>
-          <span class="text-[11px] sm:text-sm font-bold"><OdometerNumber :value="maxFood - student.food_count" /></span>
-          <span class="text-[9px] sm:text-[10px]">🍖</span>
-        </span>
-        <span v-else class="text-yellow-500 font-bold text-[10px] sm:text-xs">✨ 已满级</span>
-      </div>
-      <div class="h-1.5 sm:h-2.5 bg-slate-100 rounded-full overflow-hidden">
-        <div class="h-full bg-gradient-to-r from-cyan-400 to-sky-400 rounded-full transition-all duration-1000 ease-out"
-          :style="{ width: `${progressPercent}%` }">
+      <!-- 爱心值 + 积分行 -->
+      <div v-if="student.pet_type" class="flex items-center justify-between text-sm mb-2.5">
+        <div class="flex items-center gap-1 text-purple-500 font-medium">
+          <span>💜</span>
+          <span class="font-bold"><OdometerNumber :value="student.food_count" /></span>
+          <span class="text-gray-300">/</span>
+          <span class="text-gray-400 text-xs">{{ maxFood }}</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-yellow-400">⭐</span>
+          <span class="font-bold text-orange-500 text-sm"><OdometerNumber :value="student.badges ? student.badges.length : 0" /></span>
         </div>
       </div>
-    </div>
 
-    <!-- 底部数据状态栏 -->
-    <div class="flex justify-between items-center text-[10px] sm:text-[11px] font-bold text-slate-500 border-t border-slate-100 pt-1.5 sm:pt-2 gap-1">
-      <div class="flex items-center gap-0.5 text-slate-600">
-        <span class="text-[10px] sm:text-xs">🍖</span><span><OdometerNumber :value="student.food_count" /></span>
+      <!-- 无宠物时的积分 -->
+      <div v-else class="flex items-center gap-1 text-gray-400 text-sm mb-2.5">
+        <span>🥚</span><span class="font-bold text-xs">点击领养宠物</span>
       </div>
-      <div class="flex items-center gap-0.5 text-slate-400 min-w-0">
-        <span class="text-[10px] sm:text-xs opacity-60">👥</span><span class="truncate max-w-[3.5rem] sm:max-w-[5rem]">{{ groupName || '未分组' }}</span>
-      </div>
-      <div class="flex items-center gap-0.5 text-slate-400 transition-colors" :class="readOnly ? '' : 'cursor-pointer hover:text-amber-500 pointer-events-auto'" @click.stop="!readOnly && $emit('show-badges')">
-        <span class="text-[10px] sm:text-xs">🏅</span><span><OdometerNumber :value="student.badges ? student.badges.length : 0" /></span>
-      </div>
-    </div>
 
-    <!-- 满级毕业按钮 -->
-    <button v-if="isMaxLevel && !readOnly"
-      class="mt-1.5 sm:mt-2 w-full py-1.5 sm:py-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-white rounded-lg sm:rounded-xl text-[10px] sm:text-sm font-bold shadow-md hover:from-yellow-500 hover:to-amber-600 active:scale-95 transition-all z-20 pointer-events-auto"
-      @click.stop="$emit('graduate')">
-      ✨ 召唤守护兽
-    </button>
-
-    <!-- 飞入的食物动效层 -->
-    <div class="absolute inset-0 pointer-events-none rounded-2xl overflow-hidden z-50">
-      <div v-for="food in flyingFoods" :key="food.id"
-           class="absolute left-1/2 bottom-8 animate-feed-fly flex justify-center items-center">
-        <span class="text-3xl drop-shadow-2xl filter">{{ food.icon }}</span>
+      <!-- 进度条 -->
+      <div v-if="student.pet_type" class="bg-gray-100 rounded-full h-2.5 overflow-hidden">
+        <div class="h-full progress-glow rounded-full transition-all duration-500"
+          :style="{ width: `${progressPercent}%` }"></div>
       </div>
+
+      <!-- 满级毕业按钮 -->
+      <button v-if="isMaxLevel && !readOnly"
+        class="mt-2.5 w-full py-1.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:from-yellow-500 hover:to-amber-600 active:scale-95 transition-all pointer-events-auto"
+        @click.stop="$emit('graduate')">
+        ✨ 召唤守护兽
+      </button>
     </div>
   </div>
 </template>
@@ -117,14 +119,11 @@ const props = defineProps({
   batchMode: Boolean,
   undoMode: Boolean,
   selected: Boolean,
-  readOnly: {
-    type: Boolean,
-    default: false
-  },
+  readOnly: { type: Boolean, default: false },
   growthStages: Array
 })
 
-defineEmits(['click', 'select', 'change-pet', 'graduate', 'show-badges', 'print-cert'])
+defineEmits(['click', 'select', 'change-pet', 'graduate', 'show-badges', 'print-cert', 'ai-evaluate'])
 
 const justScored = ref(false)
 const flyingFoods = ref([])
@@ -134,36 +133,24 @@ watch(() => props.student.food_count, (newVal, oldVal) => {
   if (oldVal !== undefined && newVal !== oldVal) {
     justScored.value = true
     setTimeout(() => { justScored.value = false }, 800)
-
-    // 如果是加分，则触发喂食飞行特效
     if (newVal > oldVal) {
       const id = foodIdCounter++
       const icons = ['🍖', '🍎', '🍓', '🥕', '✨', '🍬', '🍔']
-      const icon = icons[Math.floor(Math.random() * icons.length)]
-      
-      flyingFoods.value.push({ id, icon })
-      
-      // 动画结束后移除 DOM
-      setTimeout(() => {
-        flyingFoods.value = flyingFoods.value.filter(f => f.id !== id)
-      }, 1000)
+      flyingFoods.value.push({ id, icon: icons[Math.floor(Math.random() * icons.length)] })
+      setTimeout(() => { flyingFoods.value = flyingFoods.value.filter(f => f.id !== id) }, 1000)
     }
   }
 })
 
-const badges = computed(() => props.student.badges || [])
+const classStore = useClassStore()
+
 const maxFood = computed(() => {
   const stages = props.growthStages || [0,5,10,20,30,45,60,75,90,100]
   return stages[stages.length - 1]
 })
 
-const progressPercent = computed(() => {
-  return Math.min(100, (props.student.food_count / maxFood.value) * 100)
-})
-
-const isMaxLevel = computed(() => {
-  return props.student.food_count >= maxFood.value
-})
+const progressPercent = computed(() => Math.min(100, (props.student.food_count / maxFood.value) * 100))
+const isMaxLevel = computed(() => props.student.food_count >= maxFood.value)
 
 const petStage = computed(() => {
   if (!props.student.pet_type) return 1
@@ -175,52 +162,35 @@ const petStage = computed(() => {
   return stage
 })
 
-const levelDotColor = computed(() => {
-  const colors = ['bg-emerald-400', 'bg-blue-400', 'bg-purple-400', 'bg-orange-400', 'bg-red-400', 'bg-pink-400', 'bg-teal-400', 'bg-indigo-400', 'bg-fuchsia-400', 'bg-rose-400'];
-  return colors[(petStage.value - 1) % colors.length];
-});
+const levelBadgeColor = computed(() => {
+  const s = petStage.value
+  if (s <= 2) return 'bg-gradient-to-r from-gray-400 to-slate-400'
+  if (s <= 4) return 'bg-gradient-to-r from-blue-400 to-cyan-400'
+  if (s <= 6) return 'bg-gradient-to-r from-purple-400 to-violet-400'
+  return 'bg-gradient-to-r from-orange-400 to-rose-400'
+})
 
 const petImageUrl = computed(() => {
   const pet = PETS.find(p => p.id === props.student.pet_type)
   if (!pet) return ''
-  return getPetImageUrl(pet.folder, petStage.value)
+  return getPetImageUrl(pet.id, petStage.value)
 })
 
-const petScale = computed(() => {
-  return 1
-})
-
-const classStore = useClassStore()
 const groupName = computed(() => {
   if (!props.student.group_id) return ''
   const g = classStore.groups.find(g => g.id === props.student.group_id)
   return g ? g.name : ''
 })
-
 </script>
 
 <style scoped>
 @keyframes feed-fly {
-  0% {
-    transform: translate(-50%, 0) scale(0.5) rotate(-20deg);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-    transform: translate(-50%, -30px) scale(1.3) rotate(10deg);
-  }
-  70% {
-    opacity: 1;
-    transform: translate(-50%, -100px) scale(1) rotate(-10deg);
-  }
-  100% {
-    transform: translate(-50%, -130px) scale(0) rotate(20deg);
-    opacity: 0;
-  }
+  0% { transform: translate(-50%, 0) scale(0.5) rotate(-20deg); opacity: 0; }
+  20% { opacity: 1; transform: translate(-50%, -30px) scale(1.3) rotate(10deg); }
+  70% { opacity: 1; transform: translate(-50%, -100px) scale(1) rotate(-10deg); }
+  100% { transform: translate(-50%, -130px) scale(0) rotate(20deg); opacity: 0; }
 }
-
 .animate-feed-fly {
-  /* 调整持续时间和缓冲函数让“吃入”有吸附感 */
   animation: feed-fly 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 </style>

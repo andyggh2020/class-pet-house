@@ -2,20 +2,20 @@
 
 /* 主题 CSS 变量 (Dot-Grid Notebook 风格) */
 :root {
-  --accent: #0ea5e9;
-  /* sky-500 */
-  --accent-hover: #0284c7;
-  /* sky-600 */
-  --theme-bg: #f8fafc;
-  /* slate-50 */
-  --theme-light: #e0f2fe;
-  /* sky-100 */
-  --theme-text: #0f172a;
-  /* slate-900 */
-  --theme-ring: #7dd3fc;
-  /* sky-300 */
-  --theme-shadow-hard: #bae6fd;
-  /* sky-200 */
+  --accent: #fb923c;
+  /* orange-400 */
+  --accent-hover: #ea580c;
+  /* orange-600 */
+  --theme-bg: #fff7ed;
+  /* orange-50 */
+  --theme-light: #ffedd5;
+  /* orange-100 */
+  --theme-text: #1c1917;
+  /* stone-900 */
+  --theme-ring: #fdba74;
+  /* orange-300 */
+  --theme-shadow-hard: #fed7aa;
+  /* orange-200 */
 }
 
 /* 全局高亮选中样式 (修复选中后文字看不见的问题) */
@@ -41,8 +41,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   min-height: 100dvh;
-  /* Solid theme gradient instead of dot grid */
-  background: linear-gradient(135deg, var(--theme-light) 0%, var(--theme-shadow-hard) 100%);
+  background: linear-gradient(135deg, #fff7ed 0%, #fce7f3 50%, #faf5ff 100%);
   color: var(--theme-text);
   font-family: 'Nunito', 'Rounded Mplus 1c', sans-serif;
 }
@@ -288,4 +287,54 @@ body::after {
 
 .animate-float-idle {
   animation: float-idle 6s ease-in-out infinite;
+}
+
+@keyframes glow-gold {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(251,191,36,0.6)); }
+  50% { filter: drop-shadow(0 0 20px rgba(251,191,36,1)); }
+}
+.animate-glow-gold {
+  animation: glow-gold 2s ease-in-out infinite;
+}
+
+@keyframes pulse-light {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+.animate-pulse-light {
+  animation: pulse-light 2s ease-in-out infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes progress-glow {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.progress-glow {
+  background: linear-gradient(90deg, #fb923c, #f472b6, #fb923c);
+  background-size: 200% auto;
+  animation: progress-glow 2s linear infinite;
+}
+
+/* 橙粉紫渐变滚动条 */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #fb923c, #f472b6);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }

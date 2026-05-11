@@ -26,6 +26,7 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
-    "cos-nodejs-sdk-v5": "^2.15.4"
+    "cos-nodejs-sdk-v5": "^2.15.4",
+    "sharp": "^0.34.5"
   }
 }

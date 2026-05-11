@@ -219,7 +219,7 @@ const getPetImage = (student) => {
   for (let i = stages.length - 1; i >= 0; i--) {
     if (student.food_count >= stages[i]) { stage = i + 1; break }
   }
-  return getPetImageUrl(pet.folder, stage)
+  return getPetImageUrl(pet.id, stage)
 }
 
 // Watch for store changes to keep local lists synced

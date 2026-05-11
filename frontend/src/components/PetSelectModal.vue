@@ -22,7 +22,7 @@
           <!-- Image area: Flex-1 takes remaining space and shrinks, min-h-0 prevents it from pushing container beyond height -->
           <div class="flex-1 min-h-0 flex items-center justify-center p-2 sm:p-4 shrink">
             <div class="relative w-full h-full bg-sky-50 rounded-2xl flex items-center justify-center p-4">
-              <img :src="getPetImageUrl(selectedPet.folder, 1)" class="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-2xl" />
+              <img :src="getPetImageUrl(selectedPet.id, 1)" class="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-2xl" />
             </div>
           </div>
           
@@ -63,7 +63,7 @@
             </div>
 
             <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto my-2 p-1 sm:p-2 bg-gradient-to-br from-white to-sky-50 rounded-xl relative overflow-hidden flex items-center justify-center mt-3">
-              <img :src="getPetImageUrl(pet.folder, 1)" :alt="pet.name" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300" />
+              <img :src="getPetImageUrl(pet.id, 1)" :alt="pet.name" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300" />
             </div>
             <span class="text-xs sm:text-sm font-bold text-slate-600 mt-1">{{ pet.name }}</span>
           </button>

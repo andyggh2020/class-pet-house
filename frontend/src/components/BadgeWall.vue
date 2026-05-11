@@ -35,7 +35,7 @@ useEscClose(emit)
 const petImageUrl = computed(() => {
   if (!props.student || !props.student.pet_type) return ''
   const pet = PETS.find(p => p.id === props.student.pet_type)
-  return pet ? getPetImageUrl(pet.folder, 10) : ''
+  return pet ? getPetImageUrl(pet.id, 10) : ''
 })
 
 const badges = computed(() => props.student.badges || [])
@@ -48,6 +48,6 @@ function getPetName(petType) {
 function getBadgeImage(badge) {
   const pet = PETS.find(p => p.id === badge.pet_type)
   if (!pet) return ''
-  return getPetImageUrl(pet.folder, 10)
+  return getPetImageUrl(pet.id, 10)
 }
 </script>

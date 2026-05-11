@@ -15,6 +15,7 @@ const routes = [
       { path: 'leaderboard', name: 'Leaderboard', component: () => import('../views/Leaderboard.vue') },
       { path: 'history', name: 'History', component: () => import('../views/HistoryView.vue') },
       { path: 'shop', name: 'Shop', component: () => import('../views/Shop.vue') },
+      { path: 'encyclopedia', name: 'Encyclopedia', component: () => import('../views/PetEncyclopedia.vue') },
     ]
   },
   {

@@ -92,9 +92,9 @@ function getStage(foodCount) {
 
 function getImageUrl(petTypeCode, foodCount) {
   const p = PETS.find(p => p.id === petTypeCode || p.name === petTypeCode)
-  const folder = p ? p.folder : petTypeCode
+  const petId = p ? p.id : petTypeCode
   const stage = getStage(foodCount)
-  return getPetImageUrl(folder, stage)
+  return getPetImageUrl(petId, stage)
 }
 
 onMounted(async () => {

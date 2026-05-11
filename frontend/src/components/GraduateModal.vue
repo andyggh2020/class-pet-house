@@ -44,7 +44,7 @@ const loading = ref(false)
 const petImageUrl = computed(() => {
   if (!props.student || !props.student.pet_type) return ''
   const pet = PETS.find(p => p.id === props.student.pet_type)
-  return pet ? getPetImageUrl(pet.folder, 10) : ''
+  return pet ? getPetImageUrl(pet.id, 10) : ''
 })
 
 async function handleGraduate() {

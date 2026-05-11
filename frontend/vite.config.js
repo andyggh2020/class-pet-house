@@ -6,10 +6,11 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   server: {
     host: true,
+    port: 8080,
     proxy: {
-      '/api': 'http://localhost:3000',
-      '/pet-images': 'http://localhost:3000',
-      '/动物图片': 'http://localhost:3000'
+      '/api': 'http://localhost:3099',
+      '/pet-images': 'http://localhost:3099',
+      '/动物图片': 'http://localhost:3099'
     }
   }
 })
