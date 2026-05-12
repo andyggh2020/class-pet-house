@@ -4,7 +4,7 @@
     <!-- 顶部双层导航 -->
     <header ref="topPanelRef" class="fixed top-0 left-0 right-0 z-50">
       <!-- 第一层：主 header 渐变 -->
-      <div class="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 px-3 sm:px-4 md:px-6 py-2.5 flex items-center justify-between gap-2 shadow-md">
+      <div class="main-header-gradient px-3 sm:px-4 md:px-6 py-2.5 flex items-center justify-between gap-2 shadow-md">
         <!-- Logo + 班级切换 -->
         <button @click="showClassModal = true" class="flex items-center gap-2 min-w-0">
           <span class="text-2xl animate-bounce-slow shrink-0">🐾</span>
@@ -44,7 +44,7 @@
       </div>
 
       <!-- 第二层：导航 tab 栏 -->
-      <div class="bg-gradient-to-r from-amber-500/90 via-orange-500/90 to-rose-500/90 backdrop-blur-sm border-t border-white/20 px-2 sm:px-4">
+      <div class="main-nav-gradient backdrop-blur-sm border-t border-white/20 px-2 sm:px-4">
         <nav class="flex items-center gap-0.5 overflow-x-auto scrollbar-hide max-w-3xl">
           <router-link v-for="tab in tabs" :key="tab.to" :to="tab.to"
             class="flex items-center gap-1 px-3 sm:px-4 py-2 rounded-t-lg text-xs sm:text-sm font-bold whitespace-nowrap transition-all shrink-0"
@@ -56,9 +56,9 @@
       </div>
 
       <!-- 搜索框（首页移动端第三行） -->
-      <div v-if="route.path === '/' " class="md:hidden bg-orange-50/95 backdrop-blur-sm px-3 py-2 border-t border-orange-100">
+      <div v-if="route.path === '/' " class="md:hidden bg-theme-light/95 backdrop-blur-sm px-3 py-2 border-t border-[var(--theme-ring)]/35">
         <input v-model="searchQuery" type="text" placeholder="🔍 搜索学生..."
-          class="w-full px-4 py-1.5 bg-white rounded-full border border-orange-200 text-sm outline-none focus:border-orange-400 font-bold text-gray-700 placeholder-gray-400" />
+          class="w-full px-4 py-1.5 bg-white rounded-full border border-[var(--theme-ring)] text-sm outline-none focus:border-accent font-bold text-gray-700 placeholder-gray-400" />
       </div>
     </header>
 
@@ -69,24 +69,24 @@
     <div v-if="classStore.groups.length && route.path === '/' && !groupMode"
       class="mb-3 relative z-40"
       :class="isFullWidthPage ? 'w-full px-3 sm:px-4 md:px-6 lg:px-8' : 'max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6'">
-      <div class="bg-white/70 backdrop-blur-md border border-orange-100 rounded-full px-1.5 py-1 flex gap-1 overflow-x-auto shadow-sm">
+      <div class="bg-white/70 backdrop-blur-md border border-[var(--theme-ring)]/35 rounded-full px-1.5 py-1 flex gap-1 overflow-x-auto shadow-sm">
         <button @click="activeGroup = null"
-          :class="activeGroup === null ? 'bg-orange-100 text-orange-600 font-extrabold' : 'text-slate-500 hover:bg-orange-50'"
+          :class="activeGroup === null ? 'bg-theme-light text-theme font-extrabold' : 'text-slate-500 hover:bg-theme-light/60'"
           class="px-3.5 py-1 rounded-full text-[13px] font-bold whitespace-nowrap transition-all flex items-center gap-1.5">
           全部同学
-          <span v-if="activeGroup === null" class="text-[10px] bg-orange-200 px-1.5 py-0.5 rounded-full">{{ groupStats.allCount }}</span>
+          <span v-if="activeGroup === null" class="text-[10px] bg-[var(--theme-shadow-hard)] px-1.5 py-0.5 rounded-full">{{ groupStats.allCount }}</span>
         </button>
         <button v-for="g in groupStats.groupsList" :key="g.id" @click="activeGroup = g.id"
-          :class="activeGroup === g.id ? 'bg-orange-100 text-orange-600 font-extrabold' : 'text-slate-500 hover:bg-orange-50'"
+          :class="activeGroup === g.id ? 'bg-theme-light text-theme font-extrabold' : 'text-slate-500 hover:bg-theme-light/60'"
           class="px-3.5 py-1 rounded-full text-[13px] font-bold whitespace-nowrap transition-all flex items-center gap-1.5">
           {{ g.name }}
-          <span v-if="activeGroup === g.id" class="text-[10px] bg-orange-200 px-1.5 py-0.5 rounded-full">{{ g.count }}</span>
+          <span v-if="activeGroup === g.id" class="text-[10px] bg-[var(--theme-shadow-hard)] px-1.5 py-0.5 rounded-full">{{ g.count }}</span>
         </button>
         <button @click="activeGroup = 'ungrouped'"
-          :class="activeGroup === 'ungrouped' ? 'bg-orange-100 text-orange-600 font-extrabold' : 'text-slate-500 hover:bg-orange-50'"
+          :class="activeGroup === 'ungrouped' ? 'bg-theme-light text-theme font-extrabold' : 'text-slate-500 hover:bg-theme-light/60'"
           class="px-3.5 py-1 rounded-full text-[13px] font-bold whitespace-nowrap transition-all flex items-center gap-1.5">
           未分组
-          <span v-if="activeGroup === 'ungrouped'" class="text-[10px] bg-orange-200 px-1.5 py-0.5 rounded-full">{{ groupStats.ungroupedCount }}</span>
+          <span v-if="activeGroup === 'ungrouped'" class="text-[10px] bg-[var(--theme-shadow-hard)] px-1.5 py-0.5 rounded-full">{{ groupStats.ungroupedCount }}</span>
         </button>
       </div>
     </div>
@@ -143,17 +143,27 @@
   </div>
 
   <!-- 底部 TabBar (仅移动端) -->
-  <div class="md:hidden fixed bottom-0 left-0 right-0 z-[999] bg-white shadow-[0_-5px_20px_rgba(0,0,0,0.08)] border-t border-orange-100 pb-[env(safe-area-inset-bottom)]">
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-[999] bg-white shadow-[0_-5px_20px_rgba(0,0,0,0.08)] border-t border-[var(--theme-ring)]/35 pb-[env(safe-area-inset-bottom)]">
     <nav class="flex items-center justify-around px-1 py-1.5">
       <router-link v-for="tab in mobileTabs" :key="tab.to" :to="tab.to"
         class="flex flex-col items-center justify-center w-14 h-12 rounded-2xl transition-all"
-        :class="isActive(tab.to) ? 'bg-orange-50 text-orange-500 scale-105' : 'text-slate-400'">
+        :class="isActive(tab.to) ? 'bg-theme-light text-theme scale-105' : 'text-slate-400'">
         <span class="text-xl mb-0.5">{{ tab.icon }}</span>
         <span class="text-[10px] font-bold leading-none">{{ tab.label }}</span>
       </router-link>
     </nav>
   </div>
 </template>
+
+<style scoped>
+.main-header-gradient {
+  background: linear-gradient(90deg, var(--theme-ring), var(--accent), var(--accent-hover));
+}
+
+.main-nav-gradient {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent-hover) 88%, transparent), color-mix(in srgb, var(--accent) 88%, transparent), color-mix(in srgb, var(--theme-ring) 88%, transparent));
+}
+</style>
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'

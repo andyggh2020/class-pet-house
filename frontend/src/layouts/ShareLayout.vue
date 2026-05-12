@@ -1,20 +1,20 @@
 <template>
   <div class="min-h-screen text-gray-800 pb-20" :style="{ backgroundColor: themeColor }">
     <!-- 顶部主控面板 (只读精简版) -->
-    <div class="sticky top-0 left-0 right-0 z-50 pt-2 pb-1.5 px-3 sm:px-4 md:px-6 pointer-events-none flex justify-center">
-      <div class="w-full max-w-[1600px] bg-white/95 backdrop-blur-3xl rounded-[1.35rem] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] px-4 py-3 flex items-center justify-between pointer-events-auto border border-white">
-        
-        <div class="flex items-center gap-2">
-          <span class="text-xl sm:text-2xl drop-shadow-sm">🐾</span> 
-          <div class="flex flex-col">
-            <span class="text-sm border-b-2 border-accent inline-block font-bold text-accent">{{ classInfo?.system_name || '班级宠物屋' }}</span>
-            <span class="text-base sm:text-lg font-black tracking-wide text-slate-700">{{ classInfo?.name || '加载中...' }}</span>
+    <div class="sticky top-0 left-0 right-0 z-50 px-2 pt-2 pb-1.5 sm:px-4 md:px-6 pointer-events-none flex justify-center">
+      <div class="w-full max-w-[1600px] bg-white/95 backdrop-blur-3xl rounded-[1.35rem] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] px-3 py-2.5 sm:px-4 sm:py-3 flex flex-col gap-2 pointer-events-auto border border-white sm:flex-row sm:items-center sm:justify-between">
+
+        <div class="flex min-w-0 items-center gap-2">
+          <span class="text-xl sm:text-2xl drop-shadow-sm shrink-0">🐾</span>
+          <div class="min-w-0 flex flex-col">
+            <span class="text-xs sm:text-sm border-b-2 border-accent inline-block w-fit max-w-full truncate font-bold text-accent">{{ classInfo?.system_name || '班级宠物屋' }}</span>
+            <span class="truncate text-sm font-black tracking-wide text-slate-700 sm:text-lg">{{ classInfo?.name || '加载中...' }}</span>
           </div>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex min-w-0 items-center gap-2 sm:gap-3">
           <!-- 搜索栏 -->
-          <div class="relative w-full sm:w-48 md:w-64 shrink-0">
+          <div class="relative min-w-0 flex-1 sm:w-48 md:w-64 sm:flex-none sm:shrink-0">
             <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <span class="text-slate-400 text-sm">🔍</span>
             </div>
@@ -26,7 +26,7 @@
             </button>
           </div>
 
-          <nav class="flex items-center gap-1">
+          <nav class="flex shrink-0 items-center gap-1">
             <router-link :to="`/share/${route.params.share_code}`"
               class="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold transition-all"
               :class="route.path === `/share/${route.params.share_code}` ? 'bg-cyan-50 text-[#0bc7cf]' : 'text-slate-500 hover:bg-slate-50'">

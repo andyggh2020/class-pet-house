@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-[1600px] mx-auto pb-4">
     <!-- 顶部分组导航与搜索区 -->
-    <div class="sticky top-[4.5rem] z-40 bg-white/90 backdrop-blur-md rounded-2xl shadow-sm mb-4 p-2 sm:p-3 flex items-center justify-between border-2 border-white">
+    <div class="sticky top-[6.8rem] z-40 bg-white/90 backdrop-blur-md rounded-2xl shadow-sm mb-4 p-2 sm:top-[4.5rem] sm:p-3 flex items-center justify-between border-2 border-white">
       <nav class="flex gap-2 w-full overflow-x-auto scrollbar-hide py-1 px-1">
         <button @click="activeGroup = 'all'"
           class="px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all shadow-sm flex items-center gap-1.5"
