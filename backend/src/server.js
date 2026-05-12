@@ -1,5 +1,6 @@
 const app = require('./app');
 const { sequelize } = require('./models');
+const { ensureScoreRuleCategoryColumn } = require('./utils/ensureScoreRuleCategoryColumn');
 
 const PORT = process.env.PORT || 3000;
 
@@ -12,6 +13,11 @@ async function start() {
   try {
     await sequelize.authenticate();
     console.log('✅ 数据库连接成功');
+
+    const categoryColumnAdded = await ensureScoreRuleCategoryColumn();
+    if (categoryColumnAdded) {
+      console.log('✅ 已补齐 score_rules.category 字段');
+    }
 
     if (process.env.NODE_ENV !== 'production') {
       await sequelize.sync({ alter: true });

@@ -37,6 +37,7 @@ router.post('/class/:classId/sync-defaults', auth, requireActivated, async (req,
     });
     res.json({ ...result, rules });
   } catch (err) {
+    console.error('补齐默认积分规则失败:', err);
     res.status(500).json({ error: '补齐失败' });
   }
 });
