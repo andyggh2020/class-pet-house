@@ -2,6 +2,9 @@ const router = require('express').Router();
 const { ScoreRule, Class } = require('../models');
 const auth = require('../middleware/auth');
 const { requireActivated } = require('../middleware/auth');
+const { normalizeScoreRuleCategory, syncDefaultScoreRules } = require('../constants/defaultScoreRules');
+
+const MAX_RULES_PER_CLASS = 200;
 
 // 获取班级积分规则
 router.get('/class/:classId', auth, requireActivated, async (req, res) => {
@@ -13,7 +16,7 @@ router.get('/class/:classId', auth, requireActivated, async (req, res) => {
 
     const rules = await ScoreRule.findAll({
       where: { class_id: cls.id },
-      order: [['sort_order', 'ASC']]
+      order: [['sort_order', 'ASC'], ['id', 'ASC']]
     });
     res.json(rules);
   } catch (err) {
@@ -21,10 +24,27 @@ router.get('/class/:classId', auth, requireActivated, async (req, res) => {
   }
 });
 
+// 补齐默认积分规则
+router.post('/class/:classId/sync-defaults', auth, requireActivated, async (req, res) => {
+  try {
+    const cls = await Class.findOne({ where: { id: req.params.classId, user_id: req.userId } });
+    if (!cls) return res.status(404).json({ error: '班级不存在' });
+
+    const result = await syncDefaultScoreRules(cls.id);
+    const rules = await ScoreRule.findAll({
+      where: { class_id: cls.id },
+      order: [['sort_order', 'ASC'], ['id', 'ASC']]
+    });
+    res.json({ ...result, rules });
+  } catch (err) {
+    res.status(500).json({ error: '补齐失败' });
+  }
+});
+
 // 添加积分规则
 router.post('/', auth, requireActivated, async (req, res) => {
   try {
-    const { class_id, name, icon, value } = req.body;
+    const { class_id, name, icon, value, category } = req.body;
     const cls = await Class.findOne({ where: { id: class_id, user_id: req.userId } });
     if (!cls) return res.status(404).json({ error: '班级不存在' });
     if (!name || value === undefined || value === 0) {
@@ -32,9 +52,14 @@ router.post('/', auth, requireActivated, async (req, res) => {
     }
 
     const count = await ScoreRule.count({ where: { class_id } });
-    if (count >= 50) return res.status(400).json({ error: '最多创建50条规则' });
+    if (count >= MAX_RULES_PER_CLASS) return res.status(400).json({ error: `最多创建${MAX_RULES_PER_CLASS}条规则` });
     const rule = await ScoreRule.create({
-      class_id, name, icon: icon || '⭐', value, sort_order: count
+      class_id,
+      category: normalizeScoreRuleCategory(category),
+      name: name.trim(),
+      icon: icon || '⭐',
+      value,
+      sort_order: count
     });
     res.json(rule);
   } catch (err) {
@@ -51,7 +76,7 @@ router.put('/:id', auth, requireActivated, async (req, res) => {
     const cls = await Class.findOne({ where: { id: rule.class_id, user_id: req.userId } });
     if (!cls) return res.status(403).json({ error: '无权限' });
 
-    const { name, icon, value, sort_order } = req.body;
+    const { name, icon, value, sort_order, category } = req.body;
     if (name !== undefined && (!name || typeof name !== 'string' || !name.trim())) {
       return res.status(400).json({ error: '规则名称不能为空' });
     }
@@ -59,7 +84,8 @@ router.put('/:id', auth, requireActivated, async (req, res) => {
       ...(name !== undefined && { name: name.trim() }),
       ...(icon !== undefined && { icon }),
       ...(value !== undefined && { value }),
-      ...(sort_order !== undefined && { sort_order })
+      ...(sort_order !== undefined && { sort_order }),
+      ...(category !== undefined && { category: normalizeScoreRuleCategory(category) })
     });
     res.json(rule);
   } catch (err) {

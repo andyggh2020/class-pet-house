@@ -4,6 +4,7 @@ const sequelize = require('../config/database');
 const ScoreRule = sequelize.define('ScoreRule', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   class_id: { type: DataTypes.INTEGER, allowNull: false },
+  category: { type: DataTypes.STRING(20), allowNull: false, defaultValue: '其他' },
   name: { type: DataTypes.STRING(50), allowNull: false },
   icon: { type: DataTypes.STRING(50), defaultValue: '⭐' },
   value: { type: DataTypes.INTEGER, allowNull: false },

@@ -3,6 +3,7 @@ const { Class, Student, ScoreRule, ShopItem, Group, History, ExchangeRecord } = 
 const sequelize = require('../config/database');
 const auth = require('../middleware/auth');
 const { requireActivated } = require('../middleware/auth');
+const { createDefaultScoreRules } = require('../constants/defaultScoreRules');
 
 // 获取班级列表
 router.get('/', auth, requireActivated, async (req, res) => {
@@ -19,6 +20,7 @@ router.get('/', auth, requireActivated, async (req, res) => {
 
 // 创建班级
 router.post('/', auth, requireActivated, async (req, res) => {
+  let t;
   try {
     const { name } = req.body;
     if (!name || typeof name !== 'string') return res.status(400).json({ error: '班级名称不能为空' });
@@ -26,13 +28,17 @@ router.post('/', auth, requireActivated, async (req, res) => {
     const count = await Class.count({ where: { user_id: req.userId } });
     if (count >= 20) return res.status(400).json({ error: '最多创建20个班级' });
 
+    t = await sequelize.transaction();
     const cls = await Class.create({
       user_id: req.userId,
       name: name.trim(),
       sort_order: count
-    });
+    }, { transaction: t });
+    await createDefaultScoreRules(cls.id, { transaction: t });
+    await t.commit();
     res.json(cls);
   } catch (err) {
+    if (t) await t.rollback();
     res.status(500).json({ error: '创建失败' });
   }
 });
@@ -99,6 +105,7 @@ router.delete('/:id', auth, requireActivated, async (req, res) => {
 
 // 复制班级配置（积分规则+商品+成长阶段）
 router.post('/copy-config', auth, requireActivated, async (req, res) => {
+  let t;
   try {
     const { from_class_id, to_class_id } = req.body;
     const fromCls = await Class.findOne({ where: { id: from_class_id, user_id: req.userId } });
@@ -106,30 +113,35 @@ router.post('/copy-config', auth, requireActivated, async (req, res) => {
     if (!fromCls || !toCls) return res.status(404).json({ error: '班级不存在' });
     if (fromCls.id === toCls.id) return res.status(400).json({ error: '不能复制到自身' });
 
+    t = await sequelize.transaction();
+
     // 复制成长阶段
-    await toCls.update({ growth_stages: fromCls.growth_stages });
+    await toCls.update({ growth_stages: fromCls.growth_stages }, { transaction: t });
 
     // 复制积分规则
-    const rules = await ScoreRule.findAll({ where: { class_id: from_class_id } });
+    await ScoreRule.destroy({ where: { class_id: to_class_id }, transaction: t });
+    const rules = await ScoreRule.findAll({ where: { class_id: from_class_id }, transaction: t });
     for (const r of rules) {
       await ScoreRule.create({
         class_id: to_class_id, name: r.name,
-        icon: r.icon, value: r.value, sort_order: r.sort_order
-      });
+        category: r.category || '其他', icon: r.icon, value: r.value, sort_order: r.sort_order
+      }, { transaction: t });
     }
 
     // 复制商品
-    const items = await ShopItem.findAll({ where: { class_id: from_class_id } });
+    const items = await ShopItem.findAll({ where: { class_id: from_class_id }, transaction: t });
     for (const item of items) {
       await ShopItem.create({
         class_id: to_class_id, name: item.name,
         description: item.description, icon: item.icon,
         price: item.price, stock: item.stock
-      });
+      }, { transaction: t });
     }
 
+    await t.commit();
     res.json({ message: '配置复制成功' });
   } catch (err) {
+    if (t) await t.rollback();
     res.status(500).json({ error: '复制失败' });
   }
 });

@@ -122,8 +122,18 @@
         <h3 class="text-lg font-bold text-gray-800 border-b pb-4 mb-4 flex-shrink-0">奖励与扣查项目配置</h3>
         
         <div class="bg-orange-50/50 p-4 rounded-xl mb-4 border border-orange-100 flex-shrink-0">
-          <h4 class="text-sm font-bold text-gray-700 mb-3">🛠️ 新增规则指令</h4>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+            <h4 class="text-sm font-bold text-gray-700">🛠️ 新增规则指令</h4>
+            <button @click="syncDefaultRules"
+              class="px-4 py-2 bg-white border border-orange-200 text-orange-600 rounded-lg text-xs font-black hover:bg-orange-100 transition self-start sm:self-auto">
+              补齐默认规则
+            </button>
+          </div>
           <div class="flex flex-wrap gap-2">
+            <select v-model="newRule.category"
+              class="w-28 px-3 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-accent bg-white font-bold text-gray-600">
+              <option v-for="category in scoreRuleCategories" :key="category.id" :value="category.id">{{ category.icon }} {{ category.label }}</option>
+            </select>
             <input v-model="newRule.name" placeholder="名称，例如: 积极发言"
               class="flex-1 min-w-[120px] px-3 py-2.5 rounded-lg border border-gray-200 outline-none focus:border-accent bg-white" />
             <input v-model="newRule.icon" placeholder="图标" maxlength="2"
@@ -135,19 +145,28 @@
           </div>
         </div>
 
-        <div class="flex-1 space-y-2 pr-2">
+        <div class="flex-1 space-y-4 pr-2">
           <div v-if="rules.length === 0" class="text-center py-10 text-gray-400 border-2 border-dashed border-gray-100 rounded-xl">还没配置任何积分规则</div>
-          <div v-for="r in rules" :key="r.id"
-             class="flex items-center justify-between p-3.5 rounded-xl bg-gray-50 hover:bg-orange-50 transition border border-transparent hover:border-orange-100 group">
-             <div class="flex items-center gap-4">
-               <span class="text-2xl inline-flex items-center justify-center w-10 h-10 bg-white rounded-xl shadow-sm border border-gray-100">{{ r.icon }}</span>
-               <span class="font-bold text-gray-700">{{ r.name }}</span>
-               <span :class="r.value > 0 ? 'bg-green-100 text-green-700 border-green-200' : 'bg-red-100 text-red-700 border-red-200'" class="px-3 py-1 rounded-full text-sm font-black border">
-                 {{ r.value > 0 ? '+' : '' }}{{ r.value }}
-               </span>
-             </div>
-             <button @click="deleteRule(r)" class="p-2 text-gray-300 hover:text-red-500 bg-white rounded-lg shadow-sm border border-gray-100 outline-none transition opacity-100 sm:opacity-0 group-hover:opacity-100" title="删除规则">🗑️</button>
-          </div>
+          <section v-for="group in groupedRules" :key="group.id" class="rounded-2xl border border-gray-100 bg-gray-50/50 p-3">
+            <h4 class="font-black text-gray-700 mb-2 flex items-center gap-2">
+              <span>{{ group.icon }}</span>
+              <span>{{ group.label }}</span>
+              <span class="text-xs text-gray-400 font-bold">{{ group.rules.length }} 条</span>
+            </h4>
+            <div class="space-y-2">
+              <div v-for="r in group.rules" :key="r.id"
+                 class="flex items-center justify-between p-3.5 rounded-xl bg-white hover:bg-orange-50 transition border border-transparent hover:border-orange-100 group/rule">
+                 <div class="flex items-center gap-3 min-w-0">
+                   <span class="text-2xl inline-flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl shadow-sm border border-gray-100 shrink-0">{{ r.icon }}</span>
+                   <span class="font-bold text-gray-700 truncate">{{ r.name }}</span>
+                   <span :class="r.value > 0 ? 'bg-green-100 text-green-700 border-green-200' : 'bg-red-100 text-red-700 border-red-200'" class="px-3 py-1 rounded-full text-sm font-black border shrink-0">
+                     {{ r.value > 0 ? '+' : '' }}{{ r.value }}
+                   </span>
+                 </div>
+                 <button @click="deleteRule(r)" class="p-2 text-gray-300 hover:text-red-500 bg-white rounded-lg shadow-sm border border-gray-100 outline-none transition opacity-100 sm:opacity-0 group-hover/rule:opacity-100 shrink-0" title="删除规则">🗑️</button>
+              </div>
+            </div>
+          </section>
         </div>
         <div class="mt-4 text-xs text-gray-400 text-center flex-shrink-0">提示：正数分值会在点击学生时产生“喂食”金币效果，负数则是扣分。配置实时生效。</div>
       </div>
@@ -273,7 +292,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useClassStore } from '../stores/class'
 import { useAuthStore } from '../stores/auth'
@@ -284,6 +303,7 @@ import ChangePasswordModal from '../components/ChangePasswordModal.vue'
 import { useTheme } from '../composables/useTheme'
 import { PETS } from '../utils/pets'
 import Dialog from '../utils/dialog'
+import { SCORE_RULE_CATEGORIES, groupScoreRulesByCategory } from '../utils/scoreRules'
 
 const router = useRouter()
 const classStore = useClassStore()
@@ -306,7 +326,8 @@ const newStudentName = ref('')
 const showBatchAdd = ref(false)
 const rules = ref([])
 const currentTheme = ref('pink')
-const newRule = ref({ name: '', icon: '⭐', value: 1 })
+const scoreRuleCategories = SCORE_RULE_CATEGORIES
+const newRule = ref({ category: '学习', name: '', icon: '⭐', value: 1 })
 const growthStagesText = ref('')
 const copyFromClassId = ref('')
 const showAiReport = ref(false)
@@ -323,15 +344,23 @@ const themes = [
   { id: 'yellow', color: '#facc15' },
 ]
 
-onMounted(async () => {
-  if (classStore.currentClass) {
-    systemName.value = classStore.currentClass.system_name || ''
-    className.value = classStore.currentClass.name || ''
-    currentTheme.value = classStore.currentClass.theme || 'pink'
-    growthStagesText.value = (classStore.currentClass.growth_stages || [0,5,10,20,30,45,60,75,90,100]).join(',')
-    const data = await api.get(`/score-rules/class/${classStore.currentClass.id}`)
-    rules.value = data
-  }
+const groupedRules = computed(() => groupScoreRulesByCategory(rules.value))
+
+async function loadCurrentClassSettings() {
+  if (!classStore.currentClass) return
+  systemName.value = classStore.currentClass.system_name || ''
+  className.value = classStore.currentClass.name || ''
+  currentTheme.value = classStore.currentClass.theme || 'pink'
+  growthStagesText.value = (classStore.currentClass.growth_stages || [0,5,10,20,30,45,60,75,90,100]).join(',')
+  const data = await api.get(`/score-rules/class/${classStore.currentClass.id}`)
+  rules.value = data
+  classStore.scoreRules = data
+}
+
+onMounted(loadCurrentClassSettings)
+
+watch(() => classStore.currentClass?.id, () => {
+  loadCurrentClassSettings()
 })
 
 // === 学生名单管理 ===
@@ -370,6 +399,7 @@ async function deleteRule(r) {
   try {
     await api.delete(`/score-rules/${r.id}`)
     rules.value = rules.value.filter(x => x.id !== r.id)
+    classStore.scoreRules = rules.value
   } catch (err) { Dialog.alert(err.error || '删除失败，请稍后重试') }
 }
 
@@ -378,13 +408,24 @@ async function addRule() {
   try {
     const rule = await api.post('/score-rules', {
       class_id: classStore.currentClass.id,
+      category: newRule.value.category,
       name: newRule.value.name,
       icon: newRule.value.icon || '⭐',
       value: newRule.value.value
     })
     rules.value.push(rule)
-    newRule.value = { name: '', icon: '⭐', value: 1 } // Reset to ready defaults
+    classStore.scoreRules = rules.value
+    newRule.value = { category: '学习', name: '', icon: '⭐', value: 1 }
   } catch (err) { Dialog.alert(err.error || '添加规则失败') }
+}
+
+async function syncDefaultRules() {
+  try {
+    const res = await api.post(`/score-rules/class/${classStore.currentClass.id}/sync-defaults`)
+    rules.value = res.rules || []
+    classStore.scoreRules = rules.value
+    Dialog.alert(res.created ? `已补齐 ${res.created} 条默认规则` : '默认规则已经是最新的')
+  } catch (err) { Dialog.alert(err.error || '补齐默认规则失败') }
 }
 
 // === 基础设置与杂项保存 ===
@@ -493,6 +534,7 @@ async function copyConfig() {
     await classStore.fetchClasses()
     const data = await api.get(`/score-rules/class/${classStore.currentClass.id}`)
     rules.value = data
+    classStore.scoreRules = data
     Dialog.alert('一键传功复制圆满成功！')
   } catch (err) { Dialog.alert(err.error || '无法完成云端配置转移') }
 }

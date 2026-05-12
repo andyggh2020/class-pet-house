@@ -19,8 +19,11 @@ export const useClassStore = defineStore('class', {
     },
     async switchClass(cls) {
       this.currentClass = cls
-      await this.fetchStudents()
-      await this.fetchGroups()
+      await Promise.all([
+        this.fetchStudents(),
+        this.fetchGroups(),
+        this.fetchScoreRules()
+      ])
     },
     async fetchStudents() {
       if (!this.currentClass) return
