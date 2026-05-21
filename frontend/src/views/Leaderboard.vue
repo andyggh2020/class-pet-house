@@ -148,21 +148,12 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useClassStore } from '../stores/class.js'
 import { PETS, getPetImageUrl } from '../utils/pets.js'
 
 const classStore = useClassStore()
 const rankBy = ref('food')
-
-// 确保数据已加载（直接导航到此页时 MainLayout 可能还未完成 fetch）
-onMounted(async () => {
-  if (!classStore.currentClass) {
-    await classStore.fetchClasses()
-  } else if (!classStore.students.length) {
-    await classStore.fetchStudents()
-  }
-})
 
 const rankedStudents = computed(() => {
   const list = [...classStore.students]
