@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useClassStore } from '../stores/class'
 import api from '../utils/api'
 
@@ -110,6 +110,16 @@ const total = ref(0)
 const currentPage = ref(1)
 const limit = 30
 const searchQuery = ref('')
+
+// 确保数据已加载（直接导航到此页时 MainLayout 可能还未完成 fetch）
+onMounted(async () => {
+  if (!classStore.currentClass) {
+    await classStore.fetchClasses()
+  }
+  if (classStore.currentClass) {
+    loadHistory()
+  }
+})
 
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / limit)))
 
