@@ -4,7 +4,7 @@
     <!-- Nav -->
     <nav class="nav">
       <div class="nav-inner">
-        <div class="nav-brand">🐾 班级宠物屋</div>
+        <div class="nav-brand"><span class="nav-brand-icon">🐾</span> 班级宠物屋</div>
         <div class="nav-links">
           <router-link to="/login" class="btn-ghost">登录</router-link>
           <router-link to="/register" class="btn-primary">免费注册</router-link>
@@ -16,7 +16,7 @@
     <section class="hero">
       <div class="hero-bg"></div>
       <div class="container">
-        <div class="hero-badge">专为小学老师设计</div>
+        <div class="hero-badge">专为幼儿园和小学管理设计</div>
         <h1 class="hero-title">把加减分<br>变成养宠物</h1>
         <p class="hero-sub">让每一次表扬都变得有仪式感。学生获得表扬，就等于给宠物喂了一顿饭——宠物吃得越多，长得越大，越好看。</p>
         <div class="hero-actions">
@@ -30,7 +30,7 @@
           <div class="stat-divider"></div>
           <div class="stat"><span class="stat-num">AI</span><span class="stat-label">智能辅助</span></div>
           <div class="stat-divider"></div>
-          <div class="stat"><span class="stat-num">5min</span><span class="stat-label">快速上手</span></div>
+          <div class="stat"><span class="stat-num">5分钟</span><span class="stat-label">快速上手</span></div>
         </div>
       </div>
       <div class="hero-pets">
@@ -60,9 +60,7 @@
         <div class="section-label">核心功能</div>
         <h2 class="section-title">四大核心模块</h2>
         <p class="section-sub">从宠物养成到 AI 辅助，每个功能都为课堂场景深度设计。</p>
-
         <div class="feature-grid">
-          <!-- 宠物养成 -->
           <div class="feature-card feature-card-wide">
             <div class="feature-icon">🐾</div>
             <h3>宠物养成系统</h3>
@@ -77,7 +75,6 @@
             </div>
           </div>
 
-          <!-- AI -->
           <div class="feature-card feature-card-ai">
             <div class="ai-badge">AI 亮点</div>
             <div class="feature-icon">✨</div>
@@ -92,7 +89,6 @@
             </div>
           </div>
 
-          <!-- 班级管理 -->
           <div class="feature-card">
             <div class="feature-icon">📊</div>
             <h3>班级管理全覆盖</h3>
@@ -104,7 +100,6 @@
             </div>
           </div>
 
-          <!-- 激励闭环 -->
           <div class="feature-card">
             <div class="feature-icon">🏆</div>
             <h3>激励闭环设计</h3>
@@ -180,10 +175,6 @@
     <!-- Footer -->
     <footer class="footer">
       <p>班级宠物屋 · 让课堂激励变得可视化、有趣、持久</p>
-      <div class="footer-links">
-        <router-link to="/login">登录</router-link>
-        <router-link to="/register">注册</router-link>
-      </div>
     </footer>
 
   </div>
@@ -201,7 +192,7 @@ onMounted(() => {
   if (auth.isLoggedIn) router.push('/app')
 })
 
-const heroPets = ['🐱', '🐶', '🐼', '🐰', '🦊', '🐸', '🦜', '🐢', '🐹', '🦁']
+const heroPets = ['🐱', '🐶', '🐼', '🐰', '🦊', '🐻', '🦜', '🐆', '🐹', '🐭']
 const previewPets = ['🐱', '🐶', '🐼', '🐰', '🦊', '🐸', '🦜', '🐢']
 
 const pains = [
@@ -248,7 +239,8 @@ const steps = [
 /* Nav */
 .nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 2px solid #f0e6ff; }
 .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
-.nav-brand { font-size: 20px; font-weight: 900; background: linear-gradient(135deg, #7c3aed, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.nav-brand { font-size: 24px; font-weight: 900; background: linear-gradient(135deg, #7c3aed, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px; }
+.nav-brand-icon { font-size: 26px; -webkit-text-fill-color: initial; filter: drop-shadow(0 2px 4px rgba(124,58,237,0.3)); }
 .nav-links { display: flex; align-items: center; gap: 12px; }
 .btn-ghost { padding: 8px 18px; border-radius: 10px; font-size: 14px; font-weight: 700; color: #7c3aed; text-decoration: none; border: 2px solid #e9d5ff; transition: all 0.2s; }
 .btn-ghost:hover { background: #f5f3ff; border-color: #7c3aed; }
@@ -292,7 +284,6 @@ const steps = [
 /* Features */
 .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 @media (max-width: 768px) { .feature-grid { grid-template-columns: 1fr; } }
-.feature-card-wide { grid-column: span 1; }
 .feature-card { background: white; border: 2px solid #f0e6ff; border-radius: 24px; padding: 36px; box-shadow: 0 4px 24px rgba(124,58,237,0.08); transition: transform 0.2s, box-shadow 0.2s; }
 .feature-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(124,58,237,0.15); }
 .feature-card-ai { background: linear-gradient(135deg, #faf5ff 0%, #fdf2f8 100%); border-color: #d8b4fe; position: relative; }
@@ -350,7 +341,4 @@ const steps = [
 
 /* Footer */
 .footer { background: #0f0a1e; color: #9ca3af; text-align: center; padding: 32px 24px; font-size: 13px; }
-.footer-links { display: flex; gap: 24px; justify-content: center; margin-top: 12px; }
-.footer-links a { color: #c4b5fd; text-decoration: none; font-weight: 700; transition: color 0.2s; }
-.footer-links a:hover { color: #f9a8d4; }
 </style>
