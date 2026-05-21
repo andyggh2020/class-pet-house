@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="hero-pets">
-        <span v-for="pet in heroPets" :key="pet" class="hero-pet">{{ pet }}</span>
+        <img v-for="pet in heroPets" :key="pet.name" :src="`/pet-images/${pet.name}/lv1.png`" :alt="pet.label" class="hero-pet-img" />
       </div>
     </section>
 
@@ -192,7 +192,15 @@ onMounted(() => {
   if (auth.isLoggedIn) router.push('/app')
 })
 
-const heroPets = ['🐱', '🐶', '🐼', '🐰', '🦊', '🐻', '🦜', '🐆', '🐹', '🐭']
+const heroPets = [
+  { name: 'azure-dragon', label: '青龙' },
+  { name: 'white-tiger', label: '白虎' },
+  { name: 'vermilion-bird', label: '朱雀' },
+  { name: 'pixiu', label: '貔貅' },
+  { name: 'suanni', label: '狻猊' },
+  { name: 'unicorn', label: '独角兽' },
+  { name: 'succulent-spirit', label: '多肉精灵' },
+]
 const previewPets = ['🐱', '🐶', '🐼', '🐰', '🦊', '🐸', '🦜', '🐢']
 
 const pains = [
@@ -248,7 +256,7 @@ const steps = [
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,58,237,0.5); }
 
 /* Hero */
-.hero { position: relative; padding: 90px 24px 120px; text-align: center; overflow: hidden; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 30%, #db2777 70%, #f97316 100%); color: white; }
+.hero { position: relative; padding: 90px 24px 140px; text-align: center; overflow: hidden; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 30%, #db2777 70%, #f97316 100%); color: white; }
 .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 15% 40%, rgba(255,255,255,0.12) 0%, transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(255,200,100,0.15) 0%, transparent 50%), radial-gradient(ellipse at 50% 90%, rgba(255,100,200,0.1) 0%, transparent 50%); }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; }
 .hero-badge { display: inline-block; background: rgba(255,255,255,0.25); border: 1.5px solid rgba(255,255,255,0.6); border-radius: 999px; padding: 7px 22px; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 28px; backdrop-filter: blur(8px); }
@@ -264,7 +272,9 @@ const steps = [
 .stat-num { display: block; font-size: 30px; font-weight: 900; }
 .stat-label { display: block; font-size: 12px; opacity: 0.85; margin-top: 3px; font-weight: 600; }
 .stat-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.4); }
-.hero-pets { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: center; gap: 12px; padding: 16px; opacity: 0.25; font-size: 32px; pointer-events: none; }
+.hero-pets { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: center; gap: 16px; padding: 0 24px 8px; pointer-events: none; align-items: flex-end; }
+.hero-pet-img { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25)); transition: transform 0.3s; }
+.hero-pet-img:hover { transform: translateY(-6px) scale(1.1); pointer-events: auto; }
 
 /* Sections */
 .section { padding: 80px 0; }
