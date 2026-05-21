@@ -32,7 +32,7 @@
       </div>
       
       <div class="mt-6 text-center">
-        <router-link to="/" class="text-sm text-sky-600 hover:underline">返回前台大厅</router-link>
+        <router-link to="/app" class="text-sm text-sky-600 hover:underline">返回前台大厅</router-link>
       </div>
     </div>
 
@@ -50,7 +50,7 @@
           <button @click="handleLogout" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition font-medium text-sm">
             退出登录
           </button>
-          <router-link to="/" class="px-4 py-2 text-sky-600 bg-sky-50 hover:bg-sky-100 rounded-lg transition font-medium text-sm">
+          <router-link to="/app" class="px-4 py-2 text-sky-600 bg-sky-50 hover:bg-sky-100 rounded-lg transition font-medium text-sm">
             前台大厅
           </router-link>
         </div>
