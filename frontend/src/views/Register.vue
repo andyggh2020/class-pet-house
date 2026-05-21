@@ -83,7 +83,7 @@ async function handleRegister() {
     // 传递激活码到统一注册接口
     await auth.register(username.value, password.value, activationCode.value)
     // 注册并激活成功，直接跳转大厅
-    router.push('/')
+    router.push('/app')
   } catch (err) {
     error.value = err.error || '注册失败'
   } finally {

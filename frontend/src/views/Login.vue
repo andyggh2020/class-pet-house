@@ -66,7 +66,7 @@ async function handleLogin() {
     if (data.status === 'not_activated') {
       router.push('/activate')
     } else {
-      router.push('/')
+      router.push('/app')
     }
   } catch (err) {
     error.value = err.error || '登录失败'
