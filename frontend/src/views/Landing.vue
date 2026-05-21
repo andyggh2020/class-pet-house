@@ -189,7 +189,7 @@ const router = useRouter()
 const auth = useAuthStore()
 
 onMounted(() => {
-  if (auth.isLoggedIn) router.push('/app')
+  if (auth.isLoggedIn) router.push('/')
 })
 
 const heroPets = ['🐱', '🐶', '🐼', '🐰', '🦊', '🐻', '🦜', '🐆', '🐹', '🐭']
