@@ -15,9 +15,16 @@
             <p class="text-sm font-bold text-slate-400 mt-1">选择一条规则，立即加分/扣分</p>
           </div>
 
-          <button @click="$emit('close')" class="shrink-0 w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 bg-white/70 hover:bg-white shadow-sm border border-white transition-colors text-lg">
-            ✕
-          </button>
+          <div class="flex items-center gap-2 shrink-0">
+            <template v-if="student">
+              <button @click="$emit('print-cert'); $emit('close')" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm border border-white transition-all hover:scale-110 text-base" title="保存收集卡">🖨️</button>
+              <button @click="$emit('ai-evaluate'); $emit('close')" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm border border-white transition-all hover:scale-110 text-base" title="AI评语">✨</button>
+              <button @click="$emit('change-pet'); $emit('close')" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm border border-white transition-all hover:scale-110 text-base" title="更换宠物">🔄</button>
+            </template>
+            <button @click="$emit('close')" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 bg-white/70 hover:bg-white shadow-sm border border-white transition-colors text-lg">
+              ✕
+            </button>
+          </div>
         </div>
       </div>
 

@@ -56,7 +56,7 @@
         </div>
       </section>
 
-      <section v-if="rankedStudents.length" class="grid gap-5 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+      <section v-if="rankedStudents.length" class="space-y-5">
         <div class="rounded-[2rem] border-2 border-white/80 bg-white/65 p-4 shadow-[0_24px_70px_-40px_rgba(251,146,60,0.75)] backdrop-blur-xl sm:p-6">
           <div class="mb-4 flex items-center justify-between gap-3">
             <div>
@@ -89,28 +89,24 @@
           </div>
         </div>
 
-        <div class="rounded-[2rem] border-2 border-white/80 bg-white/70 p-4 shadow-[0_24px_70px_-40px_rgba(168,85,247,0.55)] backdrop-blur-xl sm:p-6">
+        <div v-if="rankedStudents.length > 3" class="rounded-[2rem] border-2 border-white/80 bg-white/70 p-4 shadow-[0_24px_70px_-40px_rgba(168,85,247,0.55)] backdrop-blur-xl sm:p-6">
           <div class="mb-4 flex items-center justify-between gap-3">
             <div>
-              <h3 class="text-xl font-black text-slate-800 sm:text-2xl">完整榜单</h3>
+              <h3 class="text-xl font-black text-slate-800 sm:text-2xl">其他排名</h3>
               <p class="text-xs font-bold text-slate-400 sm:text-sm">每一次努力都看得见</p>
             </div>
             <span class="rounded-full bg-purple-100 px-3 py-1 text-xs font-black text-purple-600 ring-1 ring-purple-200">{{ rankTitle }}</span>
           </div>
 
-          <div class="grid gap-3">
+          <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <div
-              v-for="(s, i) in rankedStudents"
+              v-for="(s, i) in rankedStudents.slice(3)"
               :key="s.id"
               class="group relative overflow-hidden rounded-2xl border border-white bg-white/85 p-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:p-4"
-              :class="i < 3 ? 'ring-1 ring-amber-100' : ''"
             >
               <div class="flex items-center gap-3">
-                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg font-black shadow-inner" :class="rankBadgeClass(i)">
-                  <span v-if="i === 0">🥇</span>
-                  <span v-else-if="i === 1">🥈</span>
-                  <span v-else-if="i === 2">🥉</span>
-                  <span v-else>{{ i + 1 }}</span>
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg font-black shadow-inner" :class="rankBadgeClass(i + 3)">
+                  {{ i + 4 }}
                 </div>
 
                 <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-50 to-white ring-1 ring-orange-100">
@@ -122,7 +118,7 @@
                   <div class="flex items-center justify-between gap-3">
                     <div class="min-w-0">
                       <p class="truncate text-base font-black text-slate-800 sm:text-lg">{{ s.name }}</p>
-                      <p class="text-[11px] font-bold text-slate-400">第 {{ i + 1 }} 名</p>
+                      <p class="text-[11px] font-bold text-slate-400">第 {{ i + 4 }} 名</p>
                     </div>
                     <div class="shrink-0 rounded-2xl bg-orange-50 px-3 py-1.5 text-sm font-black text-orange-600 ring-1 ring-orange-100">
                       {{ getScore(s) }}

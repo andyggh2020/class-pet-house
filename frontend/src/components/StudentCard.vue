@@ -48,12 +48,12 @@
 
       <!-- 操作按钮（悬停显示，左上角） -->
       <div v-if="student.pet_type && !batchMode && !readOnly"
-        class="absolute top-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
-        <button class="w-6 h-6 flex items-center justify-center bg-white/90 rounded-full text-xs shadow-md hover:bg-white transition-all active:scale-90"
+        class="absolute top-2 left-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+        <button class="w-8 h-8 flex items-center justify-center bg-white/95 rounded-full text-base shadow-lg hover:bg-white hover:scale-110 transition-all active:scale-90"
           title="保存收集卡" @click.stop="$emit('print-cert')">🖨️</button>
-        <button class="w-6 h-6 flex items-center justify-center bg-white/90 rounded-full text-xs shadow-md hover:bg-white transition-all active:scale-90"
+        <button class="w-8 h-8 flex items-center justify-center bg-white/95 rounded-full text-base shadow-lg hover:bg-white hover:scale-110 transition-all active:scale-90"
           title="AI评语" @click.stop="$emit('ai-evaluate')">✨</button>
-        <button class="w-6 h-6 flex items-center justify-center bg-white/90 rounded-full text-xs shadow-md hover:bg-white transition-all active:scale-90"
+        <button class="w-8 h-8 flex items-center justify-center bg-white/95 rounded-full text-base shadow-lg hover:bg-white hover:scale-110 transition-all active:scale-90"
           title="更换宠物" @click.stop="$emit('change-pet')">🔄</button>
       </div>
 

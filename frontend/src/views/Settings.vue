@@ -245,6 +245,108 @@
       </div>
 
       <!--========================================
+        使用说明
+      =========================================-->
+      <div v-if="activeTab === 'manual'" class="space-y-4 animation-fade-in">
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+          <h3 class="text-lg font-bold text-gray-800 border-b pb-3 mb-6">📖 班级宠物屋 · 使用说明</h3>
+
+          <!-- 一、系统简介 -->
+          <div class="mb-6">
+            <h4 class="font-bold text-base text-gray-800 mb-3 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-accent text-white text-xs flex items-center justify-center font-black">1</span>系统简介</h4>
+            <p class="text-sm text-gray-600 leading-relaxed mb-2">班级宠物屋是一款专为小学班级设计的积分激励系统。老师通过给学生加减分，学生积累积分后可以在小卖部兑换奖品，班级宠物也会随着积分增长而进化成长。</p>
+            <div class="bg-orange-50 rounded-xl p-4 text-sm text-orange-700 space-y-1">
+              <p>🏠 <strong>班级宠物</strong>：全班共同养育，积分越高宠物等级越高</p>
+              <p>⭐ <strong>个人积分</strong>：每位同学独立积累，可在小卖部消费</p>
+              <p>🏆 <strong>排行榜</strong>：实时展示全班积分排名，激励进步</p>
+            </div>
+          </div>
+
+          <!-- 二、基本操作 -->
+          <div class="mb-6">
+            <h4 class="font-bold text-base text-gray-800 mb-3 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-accent text-white text-xs flex items-center justify-center font-black">2</span>基本操作</h4>
+            <div class="space-y-3 text-sm text-gray-600">
+              <div class="flex gap-3 items-start">
+                <span class="text-lg shrink-0">➕</span>
+                <div><strong class="text-gray-800">加分</strong>：在主页点击学生头像 → 选择加分项目（如"认真听讲"）→ 确认即可。支持批量选择多名学生同时加分。</div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-lg shrink-0">➖</span>
+                <div><strong class="text-gray-800">扣分</strong>：同上，选择扣分项目（如"忘带作业"）→ 确认。扣分不会低于0分。</div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-lg shrink-0">🛒</span>
+                <div><strong class="text-gray-800">小卖部兑换</strong>：学生在小卖部页面选择奖品 → 老师在后台确认兑换 → 积分自动扣除。</div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-lg shrink-0">📊</span>
+                <div><strong class="text-gray-800">查看历史</strong>：在"历史记录"页面可查看所有加减分记录，支持按学生、日期筛选。</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 三、宠物系统 -->
+          <div class="mb-6">
+            <h4 class="font-bold text-base text-gray-800 mb-3 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-accent text-white text-xs flex items-center justify-center font-black">3</span>宠物系统</h4>
+            <div class="space-y-2 text-sm text-gray-600">
+              <p>宠物共有 <strong>8个成长阶段</strong>，每个阶段对应不同的积分门槛（可在"成长阶段设置"中自定义）。</p>
+              <p>全班总积分达到对应门槛时，宠物自动升级并展示新形态。</p>
+              <p>在"宠物图鉴馆"中可以预览所有宠物的全部进化形态，包括普通动物和神兽伙伴。</p>
+              <div class="bg-purple-50 rounded-xl p-3 mt-2">
+                <p class="text-purple-700">💡 <strong>换宠物</strong>：在"基本设置 → 班级宠物"中可以更换当前班级的宠物种类。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 四、班级工具 -->
+          <div class="mb-6">
+            <h4 class="font-bold text-base text-gray-800 mb-3 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-accent text-white text-xs flex items-center justify-center font-black">4</span>班级工具</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div class="bg-gray-50 rounded-xl p-3">
+                <p class="font-bold text-gray-800 mb-1">🎲 随机点名</p>
+                <p class="text-gray-500">从全班随机抽取一名同学，公平公正，避免老师偏心嫌疑。</p>
+              </div>
+              <div class="bg-gray-50 rounded-xl p-3">
+                <p class="font-bold text-gray-800 mb-1">⏱️ 课堂计时器</p>
+                <p class="text-gray-500">倒计时工具，适合限时练习、小组讨论等场景。</p>
+              </div>
+              <div class="bg-gray-50 rounded-xl p-3">
+                <p class="font-bold text-gray-800 mb-1">🎯 随机分组</p>
+                <p class="text-gray-500">一键将全班随机分成若干小组，适合合作学习活动。</p>
+              </div>
+              <div class="bg-gray-50 rounded-xl p-3">
+                <p class="font-bold text-gray-800 mb-1">📢 分享链接</p>
+                <p class="text-gray-500">生成班级专属链接，家长和学生可通过链接查看积分排行。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 五、数据与AI -->
+          <div class="mb-6">
+            <h4 class="font-bold text-base text-gray-800 mb-3 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-accent text-white text-xs flex items-center justify-center font-black">5</span>数据与 AI 功能</h4>
+            <div class="space-y-2 text-sm text-gray-600">
+              <p>🤖 <strong>AI 班级报告</strong>：在"超级工具"中点击"生成AI报告"，系统会分析全班积分数据，自动生成班级整体表现报告和个人建议。</p>
+              <p>📤 <strong>导出数据</strong>：支持将学生积分数据导出为 Excel 表格，方便存档或与家长沟通。</p>
+              <p>🔄 <strong>复刻配置</strong>：管理多个班级时，可将一个班的积分规则、奖品列表等配置一键复制到另一个班。</p>
+            </div>
+          </div>
+
+          <!-- 六、管理员与重置 -->
+          <div>
+            <h4 class="font-bold text-base text-gray-800 mb-3 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-accent text-white text-xs flex items-center justify-center font-black">6</span>管理员与账号</h4>
+            <div class="space-y-2 text-sm text-gray-600">
+              <p>👤 <strong>修改密码</strong>：在"账号中心"中可修改登录密码，建议定期更换。</p>
+              <p>🔑 <strong>忘记密码</strong>：请联系系统管理员获取激活码，通过激活码重置密码。</p>
+              <p>🗑️ <strong>重置班级数据</strong>：在"超级工具 → 危险操作"中可清空积分或重置全部数据，操作不可撤销，请谨慎使用。</p>
+              <div class="bg-red-50 rounded-xl p-3 mt-2">
+                <p class="text-red-600">⚠️ 重置操作会永久删除数据，建议操作前先导出备份。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--========================================
         账号管理
       =========================================-->
       <div v-if="activeTab === 'account'" class="bg-white rounded-2xl p-6 shadow-sm animation-fade-in flex flex-col min-h-[400px]">
@@ -317,6 +419,7 @@ const tabs = [
   { id: 'rules', name: '积分规则', icon: '📋' },
   { id: 'tools', name: '超级工具', icon: '🛠️' },
   { id: 'account', name: '账号中心', icon: '👤' },
+  { id: 'manual', name: '使用说明', icon: '📖' },
 ]
 const activeTab = ref('basic')
 
@@ -542,7 +645,7 @@ async function copyConfig() {
 // === 闭合退出 ===
 function handleLogout() {
   authStore.logout()
-  router.push('/login')
+  router.push('/landing')
 }
 </script>
 

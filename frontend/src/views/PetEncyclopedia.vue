@@ -4,7 +4,7 @@
     <div class="pointer-events-none absolute top-56 -left-24 h-80 w-80 rounded-full bg-fuchsia-300/25 blur-3xl"></div>
     <div class="pointer-events-none absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-amber-200/35 blur-3xl"></div>
 
-    <div class="relative mx-auto max-w-6xl space-y-5 sm:space-y-6">
+    <div class="relative space-y-5 sm:space-y-6">
       <section class="overflow-hidden rounded-[2rem] border-2 border-white/80 bg-white/70 p-4 shadow-[0_24px_70px_-35px_rgba(244,114,182,0.65)] backdrop-blur-xl sm:p-6 lg:p-7">
         <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div class="min-w-0">
@@ -20,20 +20,6 @@
             </p>
           </div>
 
-          <div class="grid grid-cols-3 gap-2 sm:gap-3 lg:min-w-[24rem]">
-            <div class="rounded-2xl bg-white/85 p-3 text-center shadow-sm ring-1 ring-orange-100">
-              <p class="text-[11px] font-black text-slate-400">全部宠物</p>
-              <p class="mt-1 text-2xl font-black text-slate-800">{{ PETS.length }}</p>
-            </div>
-            <div class="rounded-2xl bg-white/85 p-3 text-center shadow-sm ring-1 ring-rose-100">
-              <p class="text-[11px] font-black text-slate-400">普通动物</p>
-              <p class="mt-1 text-2xl font-black text-orange-500">{{ normalPets.length }}</p>
-            </div>
-            <div class="rounded-2xl bg-white/85 p-3 text-center shadow-sm ring-1 ring-purple-100">
-              <p class="text-[11px] font-black text-slate-400">神兽伙伴</p>
-              <p class="mt-1 text-2xl font-black text-purple-500">{{ mythicPets.length }}</p>
-            </div>
-          </div>
         </div>
 
         <div class="mt-6 rounded-[1.5rem] bg-white/75 p-1.5 shadow-inner ring-1 ring-white">

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-6xl mx-auto">
     <!-- 标题 + 统计 -->
     <div class="flex items-center justify-between mb-4 px-1">
       <h2 class="text-xl font-black text-gray-700 flex items-center gap-2">

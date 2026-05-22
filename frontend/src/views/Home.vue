@@ -36,6 +36,9 @@
       :student="selectedStudent"
       @close="showScoreModal = false"
       @scored="onScored"
+      @print-cert="handlePrintCert(selectedStudent)"
+      @ai-evaluate="handleAiEvaluate(selectedStudent)"
+      @change-pet="handleChangePet(selectedStudent)"
     />
 
     <!-- 宠物选择弹窗 -->
