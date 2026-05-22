@@ -16,7 +16,7 @@ async function start() {
 
     const categoryColumnAdded = await ensureScoreRuleCategoryColumn();
     if (categoryColumnAdded) {
-      console.log('✅ 已补齐 score_rules.category 字段');
+      console.log('✅ 已补齐 score_rules 字段:', categoryColumnAdded.join(', '));
     }
 
     if (process.env.NODE_ENV !== 'production') {
