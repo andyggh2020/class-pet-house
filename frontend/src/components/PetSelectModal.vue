@@ -19,9 +19,8 @@
       <div class="flex-1 overflow-y-auto min-h-0 p-4 sm:p-5">
         <!-- 起名输入框 -->
         <div v-if="selectedPet" class="h-full flex flex-col min-h-0">
-          <!-- Image area: Flex-1 takes remaining space and shrinks, min-h-0 prevents it from pushing container beyond height -->
-          <div class="flex-1 min-h-0 flex items-center justify-center p-2 sm:p-4 shrink">
-            <div class="relative w-full h-full bg-sky-50 rounded-2xl flex items-center justify-center p-4">
+          <div class="flex items-center justify-center p-2 sm:p-4">
+            <div class="relative bg-sky-50 rounded-2xl flex items-center justify-center p-4 w-48 h-48 sm:w-56 sm:h-56">
               <img :src="getPetImageUrl(selectedPet.id, 1)" class="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-2xl" />
             </div>
           </div>
