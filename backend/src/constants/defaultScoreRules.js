@@ -2,11 +2,13 @@ const { ScoreRule } = require('../models');
 
 const SCORE_RULE_CATEGORIES = ['学习', '行为', '健康', '其他'];
 
+// icon 置空，前端 ScoreRuleModal.vue 第 77 行已有 fallback（加分→🌟 扣分→⚠️）
+// 避免生产环境 MySQL charset 不支持 utf8mb4 导致 emoji 插入失败
 const CATEGORY_ICONS = {
-  学习: '📚',
-  行为: '🎯',
-  健康: '💪',
-  其他: '📌'
+  学习: '',
+  行为: '',
+  健康: '',
+  其他: ''
 };
 
 const rulesByCategory = {
@@ -126,10 +128,7 @@ function normalizeScoreRuleCategory(category) {
   return SCORE_RULE_CATEGORIES.includes(category) ? category : '其他';
 }
 
-// 带 emoji 降级机制的批量创建：
-// 1. 优先尝试带 emoji 图标批量插入
-// 2. 失败则清除 emoji 图标重试（兼容 MySQL charset 不支持 utf8mb4 的情况）
-//    ScoreRuleModal.vue 已对 icon 为空的情况做了 fallback 显示
+// icon 已改为空字符串，不存在 emoji charset 问题；保留 try/catch 兜底
 async function _bulkCreateWithFallback(classId, rules, options = {}) {
   try {
     return await ScoreRule.bulkCreate(
@@ -140,18 +139,7 @@ async function _bulkCreateWithFallback(classId, rules, options = {}) {
     const errCode = err?.original?.code || err?.parent?.code || '';
     const errMsg = err?.original?.message || err?.parent?.message || err?.message || '';
     console.error('❌ bulkCreate 失败, code:', errCode, 'message:', errMsg);
-
-    const isCharsetError =
-      errCode === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD' ||
-      errMsg.includes('Incorrect string value');
-
-    if (!isCharsetError) throw err; // 非 charset 错误则不降级，直接抛出
-
-    console.warn('⚠️ icon emoji 插入失败，降级为无图标插入（不影响使用，前端会显示默认 icon）');
-    return await ScoreRule.bulkCreate(
-      rules.map(rule => ({ class_id: classId, ...rule, icon: '' })),
-      options
-    );
+    throw err;
   }
 }
 
