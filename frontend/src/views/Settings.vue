@@ -527,7 +527,9 @@ async function syncDefaultRules() {
     const res = await api.post(`/score-rules/class/${classStore.currentClass.id}/sync-defaults`)
     rules.value = res.rules || []
     classStore.scoreRules = rules.value
-    Dialog.alert(res.created ? `已补齐 ${res.created} 条默认规则` : '默认规则已经是最新的')
+    Dialog.alert(res.created || res.updated
+      ? [res.created && `已补齐 ${res.created} 条`, res.updated && `已更新 ${res.updated} 条图标`].filter(Boolean).join('，')
+      : '默认规则已经是最新的')
   } catch (err) { Dialog.alert(err.error || '补齐默认规则失败') }
 }
 

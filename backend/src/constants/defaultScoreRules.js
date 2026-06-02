@@ -157,15 +157,42 @@ async function createDefaultScoreRules(classId, options = {}) {
 async function syncDefaultScoreRules(classId, options = {}) {
   const existingRules = await ScoreRule.findAll({
     where: { class_id: classId },
-    attributes: ['name', 'value'],
+    attributes: ['id', 'name', 'value', 'icon'],
     transaction: options.transaction
   });
-  const existingKeys = new Set(existingRules.map(rule => `${rule.name}::${rule.value}`));
-  const missingRules = DEFAULT_SCORE_RULES.filter(rule => !existingKeys.has(`${rule.name}::${rule.value}`));
-  if (!missingRules.length) return { created: 0, total: existingRules.length };
 
-  await _bulkCreateWithFallback(classId, missingRules, options);
-  return { created: missingRules.length, total: existingRules.length + missingRules.length };
+  // 建立 (name::value) → rule 的映射，用于判断缺失规则和更新 icon
+  const existingMap = new Map();
+  for (const r of existingRules) {
+    existingMap.set(`${r.name}::${r.value}`, r);
+  }
+
+  // 1) 补充缺失的规则
+  const missingRules = DEFAULT_SCORE_RULES.filter(
+    rule => !existingMap.has(`${rule.name}::${rule.value}`)
+  );
+  let created = 0;
+  if (missingRules.length) {
+    await _bulkCreateWithFallback(classId, missingRules, options);
+    created = missingRules.length;
+  }
+
+  // 2) 更新已有规则的 icon（修复之前补齐时 icon 为空的问题）
+  let updated = 0;
+  for (const defaultRule of DEFAULT_SCORE_RULES) {
+    const key = `${defaultRule.name}::${defaultRule.value}`;
+    const existing = existingMap.get(key);
+    if (existing && existing.icon !== defaultRule.icon) {
+      await ScoreRule.update(
+        { icon: defaultRule.icon },
+        { where: { id: existing.id }, transaction: options.transaction }
+      );
+      updated++;
+    }
+  }
+
+  const total = existingRules.length + created;
+  return { created, updated, total };
 }
 
 module.exports = {
