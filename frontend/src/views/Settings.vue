@@ -157,7 +157,7 @@
               <div v-for="r in group.rules" :key="r.id"
                  class="flex items-center justify-between p-3.5 rounded-xl bg-white hover:bg-orange-50 transition border border-transparent hover:border-orange-100 group/rule">
                  <div class="flex items-center gap-3 min-w-0">
-                   <span class="text-2xl inline-flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl shadow-sm border border-gray-100 shrink-0">{{ r.icon }}</span>
+                   <span class="text-2xl inline-flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl shadow-sm border border-gray-100 shrink-0">{{ r.icon || group.icon }}</span>
                    <span class="font-bold text-gray-700 truncate">{{ r.name }}</span>
                    <span :class="r.value > 0 ? 'bg-green-100 text-green-700 border-green-200' : 'bg-red-100 text-red-700 border-red-200'" class="px-3 py-1 rounded-full text-sm font-black border shrink-0">
                      {{ r.value > 0 ? '+' : '' }}{{ r.value }}
