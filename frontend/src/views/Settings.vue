@@ -146,8 +146,20 @@
         </div>
 
         <div class="flex-1 space-y-4 pr-2">
-          <div v-if="rules.length === 0" class="text-center py-10 text-gray-400 border-2 border-dashed border-gray-100 rounded-xl">还没配置任何积分规则</div>
-          <section v-for="group in groupedRules" :key="group.id" class="rounded-2xl border border-gray-100 bg-gray-50/50 p-3">
+          <!-- 分类筛选 -->
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xs font-bold text-gray-400">筛选：</span>
+            <button @click="filterCategory = ''"
+              class="px-3 py-1.5 rounded-lg text-xs font-bold transition"
+              :class="filterCategory === '' ? 'bg-accent text-white shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'">全部</button>
+            <button v-for="cat in scoreRuleCategories" :key="cat.id" @click="filterCategory = cat.id"
+              class="px-3 py-1.5 rounded-lg text-xs font-bold transition"
+              :class="filterCategory === cat.id ? 'bg-accent text-white shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'">
+              {{ cat.icon }} {{ cat.label }}
+            </button>
+          </div>
+          <div v-if="filteredRules.length === 0" class="text-center py-10 text-gray-400 border-2 border-dashed border-gray-100 rounded-xl">还没配置任何积分规则</div>
+          <section v-for="group in filteredRules" :key="group.id" class="rounded-2xl border border-gray-100 bg-gray-50/50 p-3">
             <h4 class="font-black text-gray-700 mb-2 flex items-center gap-2">
               <span>{{ group.icon }}</span>
               <span>{{ group.label }}</span>
@@ -447,7 +459,11 @@ const themes = [
   { id: 'yellow', color: '#facc15' },
 ]
 
+const filterCategory = ref('')
 const groupedRules = computed(() => groupScoreRulesByCategory(rules.value))
+const filteredRules = computed(() =>
+  filterCategory.value ? groupedRules.value.filter(g => g.id === filterCategory.value) : groupedRules.value
+)
 
 async function loadCurrentClassSettings() {
   if (!classStore.currentClass) return
