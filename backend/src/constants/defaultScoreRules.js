@@ -126,11 +126,34 @@ function normalizeScoreRuleCategory(category) {
   return SCORE_RULE_CATEGORIES.includes(category) ? category : '其他';
 }
 
+// 带 emoji 降级机制的批量创建：
+// 1. 优先尝试带 emoji 图标批量插入
+// 2. 失败则清除 emoji 图标重试（兼容 MySQL charset 不支持 utf8mb4 的情况）
+//    ScoreRuleModal.vue 已对 icon 为空的情况做了 fallback 显示
+async function _bulkCreateWithFallback(classId, rules, options = {}) {
+  try {
+    return await ScoreRule.bulkCreate(
+      rules.map(rule => ({ class_id: classId, ...rule })),
+      options
+    );
+  } catch (err) {
+    const isCharsetError =
+      err?.original?.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD' ||
+      err?.parent?.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD' ||
+      (err?.message && err.message.includes('Incorrect string value'));
+
+    if (!isCharsetError) throw err; // 非 charset 错误则不降级，直接抛出
+
+    console.warn('⚠️ icon emoji 插入失败（可能 MySQL 不支持 utf8mb4），降级为无图标插入');
+    return await ScoreRule.bulkCreate(
+      rules.map(rule => ({ class_id: classId, ...rule, icon: '' })),
+      options
+    );
+  }
+}
+
 async function createDefaultScoreRules(classId, options = {}) {
-  return ScoreRule.bulkCreate(
-    DEFAULT_SCORE_RULES.map(rule => ({ class_id: classId, ...rule })),
-    options
-  );
+  return _bulkCreateWithFallback(classId, DEFAULT_SCORE_RULES, options);
 }
 
 async function syncDefaultScoreRules(classId, options = {}) {
@@ -143,10 +166,7 @@ async function syncDefaultScoreRules(classId, options = {}) {
   const missingRules = DEFAULT_SCORE_RULES.filter(rule => !existingKeys.has(`${rule.name}::${rule.value}`));
   if (!missingRules.length) return { created: 0, total: existingRules.length };
 
-  await ScoreRule.bulkCreate(
-    missingRules.map(rule => ({ class_id: classId, ...rule })),
-    options
-  );
+  await _bulkCreateWithFallback(classId, missingRules, options);
   return { created: missingRules.length, total: existingRules.length + missingRules.length };
 }
 
