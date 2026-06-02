@@ -137,14 +137,17 @@ async function _bulkCreateWithFallback(classId, rules, options = {}) {
       options
     );
   } catch (err) {
+    const errCode = err?.original?.code || err?.parent?.code || '';
+    const errMsg = err?.original?.message || err?.parent?.message || err?.message || '';
+    console.error('❌ bulkCreate 失败, code:', errCode, 'message:', errMsg);
+
     const isCharsetError =
-      err?.original?.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD' ||
-      err?.parent?.code === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD' ||
-      (err?.message && err.message.includes('Incorrect string value'));
+      errCode === 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD' ||
+      errMsg.includes('Incorrect string value');
 
     if (!isCharsetError) throw err; // 非 charset 错误则不降级，直接抛出
 
-    console.warn('⚠️ icon emoji 插入失败（可能 MySQL 不支持 utf8mb4），降级为无图标插入');
+    console.warn('⚠️ icon emoji 插入失败，降级为无图标插入（不影响使用，前端会显示默认 icon）');
     return await ScoreRule.bulkCreate(
       rules.map(rule => ({ class_id: classId, ...rule, icon: '' })),
       options
