@@ -2,8 +2,9 @@ const { ScoreRule } = require('../models');
 
 const SCORE_RULE_CATEGORIES = ['学习', '行为', '健康', '其他'];
 
-// icon 置空，前端 ScoreRuleModal.vue 第 77 行已有 fallback（加分→🌟 扣分→⚠️）
-// 避免生产环境 MySQL charset 不支持 utf8mb4 导致 emoji 插入失败
+// 图标用空字符串（避免生产环境 MySQL charset 不支持 utf8mb4 时插入失败）。
+// 若 charset 支持 emoji，_bulkCreateWithFallback 的降级机制会用空值兜底后重试。
+// 前端 ScoreRuleModal.vue 会根据 rule.category 显示对应的分类 emoji（📚🎯💪📌）。
 const CATEGORY_ICONS = {
   学习: '',
   行为: '',

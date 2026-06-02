@@ -74,7 +74,7 @@
                 :class="rule.value > 0 ? 'bg-gradient-to-b from-emerald-50 to-transparent' : 'bg-gradient-to-b from-rose-50 to-transparent'"></div>
               <div class="relative mt-4 w-13 h-13 rounded-2xl flex items-center justify-center text-3xl mb-3 transition-transform group-hover:scale-110 shadow-inner"
                 :class="rule.value > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'">
-                {{ rule.icon || (rule.value > 0 ? '🌟' : '⚠️') }}
+                {{ rule.icon || group.icon }}
               </div>
               <div class="relative font-black text-slate-700 text-[13px] sm:text-sm text-center w-full leading-snug px-3 line-clamp-2 min-h-[2.4em]">{{ rule.name }}</div>
               <div class="relative mt-auto mb-3 font-black text-xs px-3 py-1 rounded-full flex items-center gap-0.5 font-mono border"
