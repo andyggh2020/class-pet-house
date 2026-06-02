@@ -1,5 +1,5 @@
 const app = require('./app');
-const { sequelize } = require('./models');
+const { sequelize, ScoreRule } = require('./models');
 const { ensureScoreRuleCategoryColumn } = require('./utils/ensureScoreRuleCategoryColumn');
 
 const PORT = process.env.PORT || 3000;
@@ -14,9 +14,21 @@ async function start() {
     await sequelize.authenticate();
     console.log('✅ 数据库连接成功');
 
-    const categoryColumnAdded = await ensureScoreRuleCategoryColumn();
-    if (categoryColumnAdded) {
-      console.log('✅ 已补齐 score_rules 字段:', categoryColumnAdded.join(', '));
+    try {
+      const categoryColumnAdded = await ensureScoreRuleCategoryColumn();
+      if (categoryColumnAdded) {
+        console.log('✅ 已补齐 score_rules 字段:', categoryColumnAdded.join(', '));
+      }
+    } catch (colErr) {
+      console.error('⚠️ score_rules 字段补齐失败:', colErr.message);
+    }
+
+    // 生产环境也同步 score_rules 表（只同步这一个表，确保列结构完整）
+    try {
+      await ScoreRule.sync({ alter: true });
+      console.log('✅ score_rules 表结构已同步');
+    } catch (syncErr) {
+      console.warn('⚠️ score_rules 表同步失败（skip）:', syncErr.message);
     }
 
     if (process.env.NODE_ENV !== 'production') {

@@ -33,9 +33,14 @@
         </button>
       </div>
 
-      <div class="mt-5 text-center text-sm text-gray-400 space-x-4">
-        <router-link to="/register" class="hover:text-orange-500 font-bold transition-colors">注册账号</router-link>
-        <router-link to="/reset-password" class="hover:text-orange-500 font-bold transition-colors">忘记密码</router-link>
+      <div class="mt-5 text-center text-sm space-y-2">
+        <div class="space-x-4 text-gray-400">
+          <router-link to="/register" class="hover:text-orange-500 font-bold transition-colors">注册账号</router-link>
+          <router-link to="/reset-password" class="hover:text-orange-500 font-bold transition-colors">忘记密码</router-link>
+        </div>
+        <div>
+          <router-link to="/landing" class="text-gray-300 hover:text-orange-400 transition-colors">← 返回首页</router-link>
+        </div>
       </div>
     </div>
   </div>

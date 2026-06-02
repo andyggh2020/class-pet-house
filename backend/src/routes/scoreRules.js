@@ -3,6 +3,7 @@ const { ScoreRule, Class } = require('../models');
 const auth = require('../middleware/auth');
 const { requireActivated } = require('../middleware/auth');
 const { normalizeScoreRuleCategory, syncDefaultScoreRules } = require('../constants/defaultScoreRules');
+const { ensureScoreRuleCategoryColumn } = require('../utils/ensureScoreRuleCategoryColumn');
 
 const MAX_RULES_PER_CLASS = 200;
 
@@ -29,6 +30,13 @@ router.post('/class/:classId/sync-defaults', auth, requireActivated, async (req,
   try {
     const cls = await Class.findOne({ where: { id: req.params.classId, user_id: req.userId } });
     if (!cls) return res.status(404).json({ error: '班级不存在' });
+
+    // 先确保缺失的列已补齐（如 icon、sort_order），以防生产环境启动时未成功
+    try {
+      await ensureScoreRuleCategoryColumn();
+    } catch (colErr) {
+      console.warn('补齐 score_rules 字段失败，继续尝试同步默认规则:', colErr.message);
+    }
 
     const result = await syncDefaultScoreRules(cls.id);
     const rules = await ScoreRule.findAll({
