@@ -2,12 +2,25 @@ const router = require('express').Router();
 const { Student, Class } = require('../models');
 const auth = require('../middleware/auth');
 const { requireActivated } = require('../middleware/auth');
-const { createCanvas, loadImage } = require('canvas');
 const archiver = require('archiver');
 const path = require('path');
 
+// canvas 懒加载：避免缺少系统库（如 libuuid.so.1）导致服务启动崩溃
+let _canvas = null;
+function getCanvas() {
+  if (!_canvas) {
+    try {
+      _canvas = require('canvas');
+    } catch (e) {
+      throw new Error(`canvas 模块加载失败: ${e.message}`);
+    }
+  }
+  return _canvas;
+}
+
 // 生成单个证书 PNG
 async function generateCertificate(student, badge, template, date) {
+  const { createCanvas, loadImage } = getCanvas();
   const width = 800, height = 1130;
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext('2d');
@@ -76,6 +89,7 @@ async function generateCertificate(student, badge, template, date) {
 
 // 生成徽章贴纸 PNG（圆形）
 async function generateSticker(student, badge) {
+  const { createCanvas, loadImage } = getCanvas();
   const size = 300;
   const canvas = createCanvas(size, size);
   const ctx = canvas.getContext('2d');
