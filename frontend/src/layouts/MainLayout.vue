@@ -4,7 +4,7 @@
     <!-- 顶部双层导航 -->
     <header ref="topPanelRef" class="fixed top-0 left-0 right-0 z-50">
       <!-- 第一层：主 header 渐变 -->
-      <div class="main-header-gradient px-3 sm:px-4 md:px-6 py-2.5 flex items-center justify-between gap-2 shadow-md">
+      <div class="main-header-gradient px-3 sm:px-4 md:px-6 py-2 md:py-2.5 shadow-md flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
         <!-- Logo + 班级切换 -->
         <button @click="showClassModal = true" class="flex items-center gap-2 min-w-0">
           <span class="text-2xl animate-bounce-slow shrink-0">🐾</span>
@@ -41,25 +41,26 @@
           <input v-model="searchQuery" type="text" placeholder="🔍 搜索学生..."
             class="w-full px-4 py-1.5 bg-white/20 placeholder-white/60 text-white rounded-full border border-white/30 text-sm outline-none focus:bg-white/30 font-bold" />
         </div>
+
+        <!-- 搜索框（首页移动端，集成在 header 内 wrap 到第二行） -->
+        <div v-if="route.path === '/'" class="md:hidden basis-full">
+          <input v-model="searchQuery" type="text" placeholder="🔍 搜索学生..."
+            class="w-full px-4 py-1.5 bg-white/20 placeholder-white/60 text-white rounded-full border border-white/30 text-sm outline-none focus:bg-white/30 font-bold" />
+        </div>
       </div>
 
       <!-- 第二层：导航 tab 栏 -->
       <div class="main-nav-gradient backdrop-blur-sm border-t border-white/20 px-2 sm:px-4">
         <nav class="flex items-center gap-0.5 overflow-x-auto scrollbar-hide max-w-3xl">
           <router-link v-for="tab in tabs" :key="tab.to" :to="tab.to"
-            class="flex items-center gap-1 px-3 sm:px-4 py-2 rounded-t-lg text-xs sm:text-sm font-bold whitespace-nowrap transition-all shrink-0"
+            class="flex items-center gap-1 px-2 sm:px-4 py-1.5 sm:py-2 rounded-t-lg text-xs sm:text-sm max-[360px]:text-[11px] font-bold whitespace-nowrap transition-all shrink-0"
             :class="isActive(tab.to) ? 'bg-white text-orange-600 shadow-md' : 'text-white/80 hover:text-white hover:bg-white/10'">
-            <span>{{ tab.icon }}</span>
-            <span>{{ tab.label }}</span>
+            <span class="max-[360px]:text-sm">{{ tab.icon }}</span>
+            <span class="max-[360px]:hidden">{{ tab.label }}</span>
           </router-link>
         </nav>
       </div>
 
-      <!-- 搜索框（首页移动端第三行） -->
-      <div v-if="route.path === '/' " class="md:hidden bg-theme-light/95 backdrop-blur-sm px-3 py-2 border-t border-[var(--theme-ring)]/35">
-        <input v-model="searchQuery" type="text" placeholder="🔍 搜索学生..."
-          class="w-full px-4 py-1.5 bg-white rounded-full border border-[var(--theme-ring)] text-sm outline-none focus:border-accent font-bold text-gray-700 placeholder-gray-400" />
-      </div>
     </header>
 
     <!-- 顶部占位 -->
@@ -190,7 +191,7 @@ const showBatchScoreModal = ref(false)
 const showRandomPick = ref(false)
 const showTimer = ref(false)
 const topPanelRef = ref(null)
-const topPanelHeight = ref(120)
+const topPanelHeight = ref(route.path === '/' ? 96 : 72)
 let topPanelObserver = null
 
 const tabs = [
