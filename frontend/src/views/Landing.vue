@@ -7,7 +7,7 @@
         <div class="nav-brand"><span class="nav-brand-icon">🐾</span> 班级宠物屋</div>
         <div class="nav-links">
           <router-link to="/login" class="btn-ghost">登录</router-link>
-          <router-link to="/register" class="btn-primary">免费注册</router-link>
+          <router-link to="/register" class="btn-primary">注册</router-link>
         </div>
       </div>
     </nav>
@@ -246,6 +246,15 @@ const steps = [
 .btn-ghost:hover { background: #f5f3ff; border-color: #7c3aed; }
 .btn-primary { padding: 8px 20px; border-radius: 10px; font-size: 14px; font-weight: 800; background: linear-gradient(135deg, #7c3aed, #ec4899); color: white; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 14px rgba(124,58,237,0.4); }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,58,237,0.5); }
+
+@media (max-width: 420px) {
+  .nav-inner { padding: 0 14px; }
+  .nav-brand { font-size: 18px; gap: 4px; }
+  .nav-brand-icon { font-size: 20px; }
+  .nav-links { gap: 6px; }
+  .btn-ghost { padding: 6px 12px; font-size: 13px; }
+  .btn-primary { padding: 6px 14px; font-size: 13px; }
+}
 
 /* Hero */
 .hero { position: relative; padding: 90px 24px 120px; text-align: center; overflow: hidden; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 30%, #db2777 70%, #f97316 100%); color: white; }
